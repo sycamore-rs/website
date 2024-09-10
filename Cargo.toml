@@ -1,0 +1,9 @@
+[package]
+name = "sycamore-website"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[dependencies]
+console_error_panic_hook = "0.1.7"
+sycamore = "0.9.0-beta.3"
