@@ -6,4 +6,8 @@ publish = false
 
 [dependencies]
 console_error_panic_hook = "0.1.7"
-sycamore = "0.9.0-beta.4"
+sycamore = { version = "0.9.0-beta.4", features = ["hydrate", "suspense"] }
+sycamore-router = "0.9.0-beta.4"
+
+[target.'cfg(not(target_arch = "wasm32"))'.dependencies]
+tokio = { version = "1.40.0", features = ["full"] }
