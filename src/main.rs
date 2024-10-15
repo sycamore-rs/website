@@ -1,3 +1,4 @@
+pub mod layout;
 pub mod pages;
 pub mod shell;
 
@@ -41,7 +42,7 @@ async fn main() {
         fs::create_dir_all(PUBLIC_PATH)
             .await
             .expect("failed to create public dir");
-        fs::write(path, html)
+        fs::write(path, format!("<!DOCTYPE html>{html}"))
             .await
             .expect("failed to write html file");
     }
