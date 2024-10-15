@@ -4,18 +4,27 @@ pub mod shell;
 use self::shell::*;
 
 use sycamore::prelude::*;
-use sycamore_router::Route;
 
-static ROUTES: &[&str] = &["/index.html", "/404.html"];
-static PUBLIC_PATH: &str = "dist/.stage";
+pub async fn get_static_paths() -> Vec<String> {
+    let mut paths = vec![];
+
+    paths.push("/index.html".to_string());
+    paths.push("/404.html".to_string());
+
+    paths
+}
 
 #[cfg_ssr]
 #[tokio::main]
 async fn main() {
     use std::path::PathBuf;
+    use sycamore_router::Route;
     use tokio::fs;
 
-    for route in ROUTES {
+    static PUBLIC_PATH: &str = "dist/.stage";
+
+    let routes = get_static_paths().await;
+    for route in routes {
         let path = PathBuf::from(PUBLIC_PATH).join(route.trim_start_matches('/'));
 
         eprintln!("Rendering `{route}` to `{}`", path.display());
@@ -23,7 +32,7 @@ async fn main() {
         let html = sycamore::render_to_string_await_suspense(|| {
             view! {
                 Shell {
-                    sycamore_router::StaticRouter(route=Routes::default().match_path(route), view=App)
+                    sycamore_router::StaticRouter(route=Routes::default().match_path(&route), view=App)
                 }
             }
         })

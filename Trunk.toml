@@ -1,6 +1,9 @@
 [build]
 filehash = false
 
+[serve]
+no_spa = true
+
 [[hooks]]
 stage = "post_build"
 command = "cargo"

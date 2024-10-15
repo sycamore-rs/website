@@ -19,6 +19,8 @@ pub fn Shell(children: Children) -> View {
         html {
             sycamore::web::NoHydrate {
                 head {
+                    link(rel="preload", href="/sycamore-website.js", r#as="script", crossorigin="")
+                    link(rel="preload", href="/sycamore-website_bg.wasm", r#as="fetch", crossorigin="")
                     script(r#type="module") {
                         r#"import init from "/sycamore-website.js"; init();"#
                     }
