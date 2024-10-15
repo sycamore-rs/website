@@ -3,7 +3,7 @@ use sycamore::prelude::*;
 #[component]
 pub fn Index() -> View {
     view! {
-        div(class="flex flex-col container mx-auto") {
+        div(class="flex flex-col container mx-2 md:mx-auto") {
             div(class="mt-20 flex flex-col md:flex-row gap-10 items-center justify-between") {
                 div {
                     h1(class="text-5xl pb-5 font-bold bg-gradient-to-br from-orange-800 from-20% to-orange-800 to-80% via-orange-950 text-transparent bg-clip-text") {
@@ -26,7 +26,7 @@ pub fn Index() -> View {
                 }
                 // Code example
                 div(class="flex-grow w-full md:w-auto") {
-                    pre(class="bg-gray-800 rounded-lg mx-auto p-5 text-white w-full md:max-w-[550px]") {
+                    pre(class="bg-gray-800 rounded-lg mx-auto p-5 text-white text-xs sm:text-sm md:text-base overflow-x-hidden w-full md:max-w-[550px]") {
                         code {
                             r#"use sycamore::prelude::*;
 
