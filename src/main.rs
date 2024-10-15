@@ -3,7 +3,7 @@ use sycamore::prelude::*;
 #[component]
 fn App() -> View {
     view! {
-        h1(class="bg-red-400") { "Sycamore" }
+        h1(class="bg-red-400") { "Sycamore!" }
     }
 }
 
