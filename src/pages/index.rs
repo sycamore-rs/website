@@ -39,11 +39,15 @@ fn Counter(initial: i32) -> View {
             "Count: " (value)
         }
     }
-}
-                                "#
+}"#
                         }
                     }
                 }
+            }
+
+            // Feature descriptions
+            h2(class="text-4xl font-bold mt-20") {
+                "Features"
             }
         }
     }
