@@ -5,16 +5,16 @@ fn Header() -> View {
     view! {
         header(class="fixed top-0 z-50 w-full border-b-2 border-gray-200 bg-gray-100") {
             nav(class="px-4") {
-                div(class="flex flex-row justify-between items-center h-10") {
+                div(class="flex flex-row justify-between items-center h-12") {
                     a(href="/") {
                         img(src="/logo.svg", alt="Sycamore Logo", class="h-10 w-10")
                     }
                     div(class="flex flex-row space-x-4") {
                         a(href="https://github.com/sycamore-rs/sycamore") {
-                            i(class="bi bi-github text-3xl hover:text-gray-600", aria-label="GitHub")
+                            i(class="bi bi-github text-2xl hover:text-gray-600", aria-label="GitHub")
                         }
                         a(href="https://discord.gg/vDwFUmm6mU") {
-                            i(class="bi bi-discord text-3xl hover:text-gray-600", aria-label="Discord")
+                            i(class="bi bi-discord text-2xl hover:text-gray-600", aria-label="Discord")
                         }
                     }
                 }
@@ -40,7 +40,7 @@ pub fn Layout(children: Children) -> View {
     view! {
         div(class="flex flex-col min-h-screen") {
             Header {}
-            main(class="mt-10 flex-grow") {
+            main(class="mt-12 mb-10 flex-grow") {
                 (children)
             }
             Footer {}
