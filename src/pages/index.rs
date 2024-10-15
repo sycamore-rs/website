@@ -6,7 +6,7 @@ pub fn Index() -> View {
         div(class="flex flex-col container mx-auto") {
             div(class="mt-20 flex flex-col md:flex-row gap-10 items-center justify-between") {
                 div {
-                    h1(class="text-5xl pb-5 font-bold") {
+                    h1(class="text-5xl pb-5 font-bold bg-gradient-to-br from-orange-800 from-20% to-orange-800 to-80% via-orange-950 text-transparent bg-clip-text") {
                         "Reactive Apps with"
                         br {}
                         "Effortless Performance."
@@ -16,10 +16,10 @@ pub fn Index() -> View {
                     }
 
                     div(class="flex flex-row flex-wrap gap-4 font-semibold mt-10") {
-                        a(class="block px-5 py-1.5 w-40 text-center bg-orange-400 rounded-full hover:bg-orange-500 transition-colors", href="/book") {
+                        a(class="block px-5 py-1.5 min-w-40 text-center bg-orange-400 rounded-full hover:bg-orange-500 transition-colors", href="/book") {
                             "Read the Book"
                         }
-                        a(class="block px-5 py-1.5 w-40 text-center text-white bg-gray-800 rounded-full hover:bg-gray-900 transition-colors", href="https://discord.gg/vDwFUmm6mU") {
+                        a(class="block px-5 py-1.5 min-w-40 text-center text-white bg-gray-800 rounded-full hover:bg-gray-900 transition-colors", href="https://discord.gg/vDwFUmm6mU") {
                             "Join the Discord"
                         }
                     }
