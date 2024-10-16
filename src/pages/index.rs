@@ -1,7 +1,18 @@
 use sycamore::prelude::*;
+use sycamore::web::js_sys;
+use sycamore::web::wasm_bindgen::JsCast;
 
 #[component]
 pub fn Index() -> View {
+    on_mount(|| {
+        // Call Prism.highlightAll() on mount.
+        let prism = js_sys::Reflect::get(&js_sys::global(), &"Prism".into()).unwrap();
+        let highlightAll = js_sys::Reflect::get(&prism, &"highlightAll".into())
+            .unwrap()
+            .unchecked_into::<js_sys::Function>();
+        highlightAll.call0(&js_sys::global()).unwrap();
+    });
+
     view! {
         div(class="flex flex-col container px-2 mx-auto") {
             div(class="mt-10 md:mt-20 flex flex-col md:flex-row gap-10 items-center justify-between") {
