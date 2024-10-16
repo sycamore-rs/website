@@ -6,10 +6,12 @@ publish = false
 
 [dependencies]
 console_error_panic_hook = "0.1.7"
-gloo-net = { version = "0.6.0", features = ["http"] }
-mdsycx = "0.1.0"
+gloo-net = { version = "0.6.0", default-features = false, features = ["http"] }
 sycamore = { version = "0.9.0-beta.4", features = ["hydrate", "suspense"] }
 sycamore-router = "0.9.0-beta.4"
+
+[target.'cfg(not(target_arch = "wasm32"))'.dependencies]
+mdsycx = "0.1.0"
 
 [patch.crates-io]
 mdsycx = { git = "https://github.com/lukechu10/mdsycx", rev = "6caa443" }

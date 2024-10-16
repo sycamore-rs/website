@@ -13,6 +13,14 @@ pub fn Post(id: String) -> View {
     }
 }
 
+#[cfg_not_ssr]
+#[component(inline_props)]
+pub fn PostBody(id: String) -> View {
+    let _ = id;
+    unreachable!()
+}
+
+#[cfg_ssr]
 #[component(inline_props)]
 pub fn PostBody(id: String) -> View {
     let file_path = format!("sycamore/docs/posts/{id}.md");
@@ -22,7 +30,7 @@ pub fn PostBody(id: String) -> View {
     let parsed = mdsycx::parse::<()>(&md).unwrap();
 
     view! {
-        div {
+        div(class="container mx-auto px-2") {
             mdsycx::MDSycX(body=parsed.body)
         }
     }

@@ -183,3 +183,10 @@ fn FeatureCard(icon: &'static str, title: &'static str, children: Children) -> V
         }
     }
 }
+
+#[component]
+fn NewsList() -> View {
+    let posts = crate::get_posts();
+
+    view! {}
+}
