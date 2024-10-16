@@ -30,8 +30,8 @@ pub fn Index() -> View {
                 }
                 // Code example
                 div(class="flex-grow w-full md:w-auto") {
-                    pre(class="bg-gray-800 rounded-lg mx-auto p-5 text-white text-xs sm:text-sm md:text-base overflow-x-hidden w-full md:max-w-[550px]") {
-                        code {
+                    pre(class="bg-gray-800 rounded-lg mx-auto text-white text-xs sm:text-sm md:text-base overflow-x-hidden w-full md:max-w-[550px] language-rust") {
+                        code(class="language-rust") {
                             r#"use sycamore::prelude::*;
 
 #[component]

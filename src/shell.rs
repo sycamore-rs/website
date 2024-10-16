@@ -37,6 +37,10 @@ pub fn Shell(children: Children) -> View {
                     // Bootstrap Icons
                     link(rel="stylesheet", href="/icons/bootstrap-icons.min.css")
                     link(rel="preload", href="/icons/fonts/bootstrap-icons.woff2?dd67030699838ea613ee6dbda90effa6", r#as="font", r#type="font/woff2", crossorigin="anonymous")
+
+                    // PrismJS
+                    script(src="/prism/prism.js", defer=true)
+                    link(rel="stylesheet", href="/prism/prism-gruvbox-dark.css")
                 }
             }
             body {
