@@ -2,6 +2,8 @@ use sycamore::prelude::*;
 use sycamore::web::js_sys;
 use sycamore::web::wasm_bindgen::JsCast;
 
+use crate::server_component::ServerOnly;
+
 #[component]
 pub fn Index() -> View {
     on_mount(|| {
@@ -13,6 +15,13 @@ pub fn Index() -> View {
         highlightAll.call0(&js_sys::global()).unwrap();
     });
 
+    view! {
+        ServerOnly(id="IndexBody".to_string(), view=IndexBody)
+    }
+}
+
+#[component]
+fn IndexBody() -> View {
     view! {
         div(class="flex flex-col container px-2 mx-auto") {
             div(class="mt-10 md:mt-20 flex flex-col md:flex-row gap-10 items-center justify-between") {
