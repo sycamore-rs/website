@@ -64,12 +64,7 @@ pub fn App(route: ReadSignal<Routes>) -> View {
                 Routes::Post(id) => view! { pages::post::Post(id=id) },
                 Routes::BookSection(section) => view! { pages::book::Book(section=section) },
                 Routes::BookDoc(section, doc) => view! { pages::book::Book(section=section, doc=doc) },
-                Routes::NotFound => view! {
-                    h1 { "404 Not Found" }
-                    p {
-                        a(href="/") { "Return to the home page" }
-                    }
-                },
+                Routes::NotFound => pages::not_found::NotFound(),
             })
         }
     }
