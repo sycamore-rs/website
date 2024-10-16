@@ -34,7 +34,7 @@ fn IndexBody() -> View {
                     }
 
                     div(class="flex flex-row flex-wrap gap-4 font-semibold mt-10") {
-                        a(class="block px-5 py-1.5 min-w-40 text-center bg-orange-400 rounded-full hover:bg-orange-500 transition-colors", href="/book") {
+                        a(class="block px-5 py-1.5 min-w-40 text-center bg-orange-400 rounded-full hover:bg-orange-500 transition-colors", href="/book/getting_started/installation") {
                             "Read the Book"
                         }
                         a(class="block px-5 py-1.5 min-w-40 text-center text-white bg-gray-800 rounded-full hover:bg-gray-900 transition-colors", href="https://discord.gg/vDwFUmm6mU") {
@@ -203,7 +203,7 @@ fn NewsList() -> View {
                     p(class="text-xs") {
                         (post.front_matter.date.to_string())
                     }
-                    a(href=format!("/post/{id}.html"), class="text-2xl font-semibold") {
+                    a(href=format!("/post/{id}"), class="text-2xl font-semibold") {
                         (post.front_matter.title.clone())
                     }
                     p(class="text-gray-800") {

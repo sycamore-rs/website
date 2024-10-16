@@ -20,7 +20,8 @@ fn main() {
 
     let routes = content::get_static_paths();
     for route in routes {
-        let path = PathBuf::from(PUBLIC_PATH).join(route.trim_start_matches('/'));
+        let trimmed = route.trim_start_matches('/').trim_end_matches(".html");
+        let path = PathBuf::from(PUBLIC_PATH).join(format!("{trimmed}.html"));
 
         eprintln!("Rendering `{route}` to `{}`", path.display());
 

@@ -11,6 +11,10 @@ pub enum Routes {
     IndexHtml,
     #[to("/post/<id>")]
     Post(String),
+    #[to("/book/<section>")]
+    BookSection(String),
+    #[to("/book/<section>/<doc>")]
+    BookDoc(String, String),
     #[to("/404.html")]
     #[not_found]
     NotFound,
@@ -57,7 +61,9 @@ pub fn App(route: ReadSignal<Routes>) -> View {
         layout::Layout {
             (match route.get_clone() {
                 Routes::Index | Routes::IndexHtml => pages::index::Index(),
-                Routes::Post(id) => view! { pages::post::Post(id=id.trim_end_matches(".html").to_string()) },
+                Routes::Post(id) => view! { pages::post::Post(id=id) },
+                Routes::BookSection(section) => view! { pages::book::Book(section=section) },
+                Routes::BookDoc(section, doc) => view! { pages::book::Book(section=section, doc=doc) },
                 Routes::NotFound => view! {
                     h1 { "404 Not Found" }
                     p {
