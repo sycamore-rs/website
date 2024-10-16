@@ -12,8 +12,9 @@ sycamore-router = "0.9.0-beta.4"
 
 [target.'cfg(not(target_arch = "wasm32"))'.dependencies]
 mdsycx = "0.1.0"
+serde = { version = "1.0.210", features = ["derive"] }
 
 [patch.crates-io]
-mdsycx = { git = "https://github.com/lukechu10/mdsycx", rev = "6caa443" }
+mdsycx = { git = "https://github.com/lukechu10/mdsycx", rev = "abe96e1" }
 sycamore = { git = "https://github.com/sycamore-rs/sycamore", rev = "144e6b2" }
 sycamore-router = { git = "https://github.com/sycamore-rs/sycamore", rev = "144e6b2" }

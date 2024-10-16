@@ -1,27 +1,23 @@
 use sycamore::prelude::*;
-use sycamore::web::js_sys;
-use sycamore::web::wasm_bindgen::JsCast;
 
 use crate::server_component::ServerOnly;
 
 #[component]
 pub fn Index() -> View {
-    on_mount(|| {
-        // Call Prism.highlightAll() on mount.
-        let prism = js_sys::Reflect::get(&js_sys::global(), &"Prism".into()).unwrap();
-        let highlightAll = js_sys::Reflect::get(&prism, &"highlightAll".into())
-            .unwrap()
-            .unchecked_into::<js_sys::Function>();
-        highlightAll.call0(&js_sys::global()).unwrap();
-    });
-
     view! {
-        ServerOnly(id="IndexBody".to_string()) {
+        ServerOnly(id="IndexBody".to_string(), on_mount=move || { crate::utils::prism_highlight_all(); }) {
             IndexBody {}
         }
     }
 }
 
+#[cfg_not_ssr]
+#[component]
+fn IndexBody() -> View {
+    unreachable!()
+}
+
+#[cfg_ssr]
 #[component]
 fn IndexBody() -> View {
     view! {
@@ -149,10 +145,12 @@ fn Counter(initial: i32) -> View {
 
 
             SectionHeading(content="News")
+            NewsList {}
         }
     }
 }
 
+#[cfg_ssr]
 #[component(inline_props)]
 fn SectionHeading(content: &'static str) -> View {
     view! {
@@ -162,6 +160,7 @@ fn SectionHeading(content: &'static str) -> View {
     }
 }
 
+#[cfg_ssr]
 #[component(inline_props)]
 fn FeatureIcon(icon: &'static str) -> View {
     view! {
@@ -171,6 +170,7 @@ fn FeatureIcon(icon: &'static str) -> View {
     }
 }
 
+#[cfg_ssr]
 #[component(inline_props)]
 fn FeatureCard(icon: &'static str, title: &'static str, children: Children) -> View {
     view! {
@@ -184,9 +184,26 @@ fn FeatureCard(icon: &'static str, title: &'static str, children: Children) -> V
     }
 }
 
+#[cfg_ssr]
 #[component]
 fn NewsList() -> View {
-    let posts = crate::get_posts();
-
-    view! {}
+    crate::content::POSTS
+        .iter()
+        .map(|(id, post)| {
+            view! {
+                div(class="mt-5") {
+                    p(class="text-xs") {
+                        (post.front_matter.date.clone())
+                    }
+                    a(href=format!("/post/{id}.html"), class="text-2xl font-semibold") {
+                        (post.front_matter.title.clone())
+                    }
+                    p(class="text-gray-800") {
+                        (post.front_matter.description.clone())
+                    }
+                }
+            }
+        })
+        .collect::<Vec<_>>()
+        .into()
 }

@@ -17,8 +17,14 @@ pub static SERVER_COMPONENTS: LazyLock<Mutex<ServerComponentMap>> = LazyLock::ne
 /// Only run the component at build-time/during SSR. On the client side, if not hydrating, this
 /// will fetch the component HTML over HTTP.
 #[component(inline_props)]
-pub fn ServerOnly(id: String, children: Children) -> View {
+pub fn ServerOnly(
+    id: String,
+    children: Children,
+    #[prop(default, setter(transform = |f: impl Fn() + 'static| Some(Box::new(f) as Box<dyn Fn()>)))]
+    on_mount: Option<Box<dyn Fn()>>,
+) -> View {
     is_ssr! {
+        let _ = on_mount;
         // Render the children, as well as adding it to SERVER_COMPONENTS.
         let mut children = Some(children);
         let view = view! {
@@ -44,9 +50,12 @@ pub fn ServerOnly(id: String, children: Children) -> View {
         // Fetch the component HTML over HTTP if we are not hydrating.
         if !sycamore::web::is_hydrating() {
             let url = format!("/server_components/{id}.html");
-            sycamore::futures::spawn_local_scoped(async move {
+            sycamore::futures::create_suspense_task(async move {
                 let html = Request::get(&url).send().await.expect("could not send HTTP request").text().await.expect("could not get text from response");
                 sycamore::web::DomNode::from_web_sys(container.get()).set_inner_html(html.into());
+                if let Some(on_mount) = on_mount {
+                    on_mount();
+                }
             });
         }
 

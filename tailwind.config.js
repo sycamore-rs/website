@@ -1,4 +1,5 @@
 const colors = require("tailwindcss/colors");
+const typography = require("@tailwindcss/typography");
 
 module.exports = {
 	content: ["./src/**/*.rs"],
@@ -26,5 +27,5 @@ module.exports = {
 			white: colors.white,
 		},
 	},
-	plugins: [],
+	plugins: [typography],
 };

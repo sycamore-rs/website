@@ -1,5 +1,3 @@
-use std::fs;
-
 use sycamore::prelude::*;
 
 use crate::server_component::ServerOnly;
@@ -7,7 +5,7 @@ use crate::server_component::ServerOnly;
 #[component(inline_props)]
 pub fn Post(id: String) -> View {
     view! {
-        ServerOnly(id=format!("Post_{id}")) {
+        ServerOnly(id=format!("Post_{id}"), on_mount=|| { crate::utils::prism_highlight_all(); }) {
             PostBody(id=id)
         }
     }
@@ -23,14 +21,13 @@ pub fn PostBody(id: String) -> View {
 #[cfg_ssr]
 #[component(inline_props)]
 pub fn PostBody(id: String) -> View {
-    let file_path = format!("sycamore/docs/posts/{id}.md");
-    let md = fs::read_to_string(file_path)
-        .unwrap_or_else(|_| panic!("could not read post file `{id}.md`"));
-
-    let parsed = mdsycx::parse::<()>(&md).unwrap();
+    let parsed = crate::content::POSTS
+        .get(&id)
+        .expect("post not found")
+        .clone();
 
     view! {
-        div(class="container mx-auto px-2") {
+        div(class="mx-auto px-2 sm:px-0 prose prose-gray md:prose-lg") {
             mdsycx::MDSycX(body=parsed.body)
         }
     }

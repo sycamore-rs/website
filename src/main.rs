@@ -1,52 +1,24 @@
+use sycamore::{prelude::*, web::cfg_ssr_item};
+
+cfg_ssr_item!(
+    pub mod content;
+);
 pub mod layout;
 pub mod pages;
 pub mod server_component;
 pub mod shell;
+pub mod utils;
 
 use self::shell::*;
 
-use sycamore::prelude::*;
-
-pub fn get_posts() -> Vec<String> {
-    use std::fs;
-
-    fs::read_dir("sycamore/docs/posts/")
-        .expect("failed to read posts directory")
-        .map(|entry| {
-            entry
-                .expect("failed to read post entry")
-                .file_name()
-                .into_string()
-                .expect("failed to convert post entry to string")
-                .trim_end_matches(".md")
-                .to_string()
-        })
-        .collect()
-}
-
-pub fn get_static_paths() -> Vec<String> {
-    let mut paths = vec![];
-
-    paths.push("/index.html".to_string());
-    paths.push("/404.html".to_string());
-
-    let posts = get_posts();
-    for post in posts {
-        paths.push(format!("/post/{}.html", post));
-    }
-
-    paths
-}
-
 #[cfg_ssr]
 fn main() {
-    use std::fs;
-    use std::path::PathBuf;
+    use std::{fs, path::PathBuf};
     use sycamore_router::Route;
 
     static PUBLIC_PATH: &str = "dist/.stage";
 
-    let routes = get_static_paths();
+    let routes = content::get_static_paths();
     for route in routes {
         let path = PathBuf::from(PUBLIC_PATH).join(route.trim_start_matches('/'));
 

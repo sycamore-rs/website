@@ -1,8 +1,7 @@
 use sycamore::prelude::*;
 use sycamore_router::Route;
 
-use crate::layout;
-use crate::pages;
+use crate::{layout, pages};
 
 #[derive(Debug, Clone, Route)]
 pub enum Routes {
