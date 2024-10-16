@@ -102,6 +102,7 @@ pub static POSTS: std::sync::LazyLock<HashMap<String, ParseRes<PostFrontmatter>>
         posts
     });
 
+#[allow(clippy::type_complexity)]
 pub static DOCS: std::sync::LazyLock<HashMap<(String, Option<String>), ParseRes<DocFrontmatter>>> =
     LazyLock::new(|| {
         let mut docs = HashMap::new();
@@ -143,6 +144,29 @@ pub static DOCS: std::sync::LazyLock<HashMap<(String, Option<String>), ParseRes<
 
         docs
     });
+
+#[derive(Debug, Clone, Deserialize)]
+pub struct BookSidebar {
+    pub sections: Vec<BookSection>,
+}
+
+#[derive(Debug, Clone, Deserialize)]
+pub struct BookSection {
+    pub title: String,
+    pub items: Vec<BookDoc>,
+}
+
+#[derive(Debug, Clone, Deserialize)]
+pub struct BookDoc {
+    pub name: String,
+    pub href: String,
+}
+
+pub static BOOK_SIDEBAR: LazyLock<BookSidebar> = LazyLock::new(|| {
+    let sidebar_json =
+        fs::read_to_string("sycamore/docs/next/sidebar.json").expect("failed to read sidebar.json");
+    serde_json::from_str(&sidebar_json).expect("failed to parse sidebar.json")
+});
 
 pub fn get_static_paths() -> Vec<String> {
     let mut paths = vec![];
