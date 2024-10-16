@@ -105,7 +105,7 @@ fn Counter(initial: i32) -> View {
             }
 
             SectionHeading(content="Community")
-            div(class="grid grid-rows-3 sm:grid-rows-1 sm:grid-cols-3 text-2xl font-bold text-center bg-white border-2 border-gray-200 divide-y-2 sm:divide-y-0 sm:divide-x-2 divide-dashed rounded-lg max-w-[1000px] mx-auto") {
+            div(class="grid grid-rows-3 sm:grid-rows-1 sm:grid-cols-3 text-2xl font-bold text-center bg-white border-2 border-gray-200 divide-y-2 sm:divide-y-0 sm:divide-x-2 divide-solid rounded-lg max-w-[1000px] mx-auto") {
                 div(class="px-4") {
                     "2.8k Stars"
                     p(class="text-sm font-normal") { "on GitHub" }
