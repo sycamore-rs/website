@@ -187,13 +187,21 @@ fn FeatureCard(icon: &'static str, title: &'static str, children: Children) -> V
 #[cfg_ssr]
 #[component]
 fn NewsList() -> View {
-    crate::content::POSTS
+    // Sort posts by date.
+    let mut posts = crate::content::POSTS
         .iter()
+        .map(|(id, post)| (id.clone(), post.clone()))
+        .collect::<Vec<_>>();
+    posts.sort_by_key(|(_, post)| post.front_matter.date);
+
+    posts
+        .into_iter()
+        .rev()
         .map(|(id, post)| {
             view! {
                 div(class="mt-5") {
                     p(class="text-xs") {
-                        (post.front_matter.date.clone())
+                        (post.front_matter.date.to_string())
                     }
                     a(href=format!("/post/{id}.html"), class="text-2xl font-semibold") {
                         (post.front_matter.title.clone())

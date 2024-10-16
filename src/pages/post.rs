@@ -27,7 +27,8 @@ pub fn PostBody(id: String) -> View {
         .clone();
 
     view! {
-        div(class="mx-auto px-2 sm:px-0 prose prose-gray md:prose-lg") {
+        div(class="mx-auto px-2 sm:px-0 pt-0 sm:pt-5 prose prose-gray md:prose-lg") {
+            span(class="text-sm") { (parsed.front_matter.date.to_string()) }
             mdsycx::MDSycX(body=parsed.body)
         }
     }
