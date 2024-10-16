@@ -32,9 +32,11 @@ fn BookBody(section: String, #[prop(!optional)] doc: Option<String>) -> View {
         .clone();
 
     view! {
-        BookSidebar {}
-        div(class="mx-auto px-2 sm:px-0 pt-0 sm:pt-5 prose prose-gray md:prose-lg") {
-            mdsycx::MDSycX(body=parsed.body)
+        div(class="flex flex-row gap-4") {
+            BookSidebar {}
+            div(class="mx-auto px-2 sm:px-0 pt-0 sm:pt-5 prose prose-gray md:prose-lg") {
+                mdsycx::MDSycX(body=parsed.body)
+            }
         }
     }
 }
@@ -71,7 +73,7 @@ fn BookSidebar() -> View {
         .collect::<Vec<_>>();
 
     view! {
-        div(class="absolute h-full mt-8 text-base") {
+        div(class="h-full mt-8 text-base") {
             (view)
         }
     }
