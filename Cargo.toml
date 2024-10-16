@@ -7,9 +7,11 @@ publish = false
 [dependencies]
 console_error_panic_hook = "0.1.7"
 gloo-net = { version = "0.6.0", features = ["http"] }
+mdsycx = "0.1.0"
 sycamore = { version = "0.9.0-beta.4", features = ["hydrate", "suspense"] }
 sycamore-router = "0.9.0-beta.4"
 
 [patch.crates-io]
+mdsycx = { git = "https://github.com/lukechu10/mdsycx", rev = "6caa443" }
 sycamore = { git = "https://github.com/sycamore-rs/sycamore", rev = "144e6b2" }
 sycamore-router = { git = "https://github.com/sycamore-rs/sycamore", rev = "144e6b2" }

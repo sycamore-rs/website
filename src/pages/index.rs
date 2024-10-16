@@ -16,7 +16,9 @@ pub fn Index() -> View {
     });
 
     view! {
-        ServerOnly(id="IndexBody".to_string(), view=IndexBody)
+        ServerOnly(id="IndexBody".to_string()) {
+            IndexBody {}
+        }
     }
 }
 

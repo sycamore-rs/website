@@ -14,13 +14,16 @@ type ServerComponentMap = HashMap<String, String>;
 /// A map from server component ids to the rendered content.
 pub static SERVER_COMPONENTS: LazyLock<Mutex<ServerComponentMap>> = LazyLock::new(Default::default);
 
+/// Only run the component at build-time/during SSR. On the client side, if not hydrating, this
+/// will fetch the component HTML over HTTP.
 #[component(inline_props)]
-pub fn ServerOnly<F: Fn() -> View + Copy + Send + 'static>(id: String, view: F) -> View {
+pub fn ServerOnly(id: String, children: Children) -> View {
     is_ssr! {
         // Render the children, as well as adding it to SERVER_COMPONENTS.
+        let mut children = Some(children);
         let view = view! {
             sycamore::web::NoHydrate {
-                (view())
+                (children.take().unwrap().call())
             }
         };
         let html = sycamore::render_to_string_in_scope(|| view);
@@ -34,7 +37,7 @@ pub fn ServerOnly<F: Fn() -> View + Copy + Send + 'static>(id: String, view: F) 
         use gloo_net::http::Request;
         use sycamore::web::ViewHtmlNode;
 
-        let _ = view;
+        let _ = children;
 
         let container = create_node_ref();
 
