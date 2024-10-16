@@ -1,0 +1,3 @@
+[submodule "sycamore"]
+	path = sycamore
+	url = https://github.com/sycamore-rs/sycamore
