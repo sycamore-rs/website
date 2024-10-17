@@ -27,7 +27,7 @@ fn Header() -> View {
 #[component]
 fn Footer() -> View {
     view! {
-        footer(class="text-sm px-4 py-2 border-t-2 border-gray-200 bg-gray-100") {
+        footer(class="text-sm px-4 pt-4 pb-2 border-t-2 border-gray-200 bg-gray-100") {
             div(class="flex flex-col sm:flex-row gap-10 md:gap-20 lg:gap-40") {
                 div {
                     div(class="flex flex-row items-center gap-4") {
@@ -66,7 +66,7 @@ fn Footer() -> View {
                     }
                 }
             }
-            p(class="mt-10 text-gray-700 text-xs") { "© 2024 Sycamore" }
+            p(class="mt-6 text-gray-700 text-xs") { "© 2024 Sycamore" }
         }
     }
 }
