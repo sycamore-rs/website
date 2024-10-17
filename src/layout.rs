@@ -66,7 +66,7 @@ fn Footer() -> View {
                     }
                 }
             }
-            p(class="mt-10 text-gray-700") { "© 2024 Sycamore" }
+            p(class="mt-10 text-gray-700 text-xs") { "© 2024 Sycamore" }
         }
     }
 }
