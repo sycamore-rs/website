@@ -110,22 +110,22 @@ fn HeadingsOutline(headings: Vec<mdsycx::OutlineHeading>) -> View {
             class="flex-none w-56 pt-8 pb-5 pr-2 text-sm sticky top-12 max-h-[calc(100vh-3rem)] overflow-y-auto hidden lg:block"
         ) {
             div {
-                p(class="font-bold") { "On this page" }
+                p(class="font-bold -mb-1") { "On this page" }
                 ul(class="pl-2") {
                     (outline)
                 }
             }
             div {
-                p(class="font-bold") { "Previous versions" }
-                ul(class="pl-2") {
+                p(class="font-bold mt-4") { "Previous versions" }
+                ul(class="pl-2 font-semibold mt-1") {
                     li {
-                        a(href="https://sycamore-rs.netlify.app/docs/v0.8/getting_started/installation") {
+                        a(class="hover:text-orange-700", href="https://sycamore-rs.netlify.app/docs/v0.8/getting_started/installation") {
                             "v0.8"
                             i(class="bi bi-box-arrow-up-right ml-2")
                         }
                     }
                     li {
-                        a(href="https://sycamore-rs.netlify.app/docs/v0.7/getting_started/installation") {
+                        a(class="hover:text-orange-700", href="https://sycamore-rs.netlify.app/docs/v0.7/getting_started/installation") {
                             "v0.7"
                             i(class="bi bi-box-arrow-up-right ml-2")
                         }
