@@ -72,6 +72,9 @@ pub fn Shell(children: Children) -> View {
                     // PrismJS
                     script(src="/prism/prism.js")
                     link(rel="stylesheet", href="/prism/prism-gruvbox-dark.css")
+
+                    // Analytics
+                    script(defer=true, src="https://sycamore-analytics.netlify.app/script.js", data-website-id="e539dd59-791b-44a2-9df4-18db88d9cb80")
                 }
             }
             body {
