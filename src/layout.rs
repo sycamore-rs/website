@@ -28,9 +28,45 @@ fn Header() -> View {
 fn Footer() -> View {
     view! {
         footer(class="text-sm px-4 py-2 border-t-2 border-gray-200 bg-gray-100") {
-            div {
-                "© 2024 Sycamore"
+            div(class="flex flex-col sm:flex-row gap-10 md:gap-20 lg:gap-40") {
+                div {
+                    div(class="flex flex-row items-center gap-4") {
+                        img(src="/logo.svg", alt="Sycamore Logo", class="h-10 w-10")
+                        span(class="font-semibold text-base") { "Sycamore" }
+                    }
+                    p(class="text-xs") {
+                        "This website is also built with Sycamore."
+                        br {}
+                        "Check out the " a(class="underline", href="https://github.com/sycamore-rs/website") { "source" } "!"
+                    }
+                }
+                div {
+                    p(class="font-semibold") { "Community" }
+                    ul {
+                        li {
+                            a(href="https://github.com/sycamore-rs/sycamore") { "GitHub" }
+                        }
+                        li {
+                            a(href="https://discord.gg/vDwFUmm6mU") { "Discord" }
+                        }
+                        li {
+                            a(href="https://github.com/sycamore-rs/sycamore-awesome") { "Awesome" }
+                        }
+                    }
+                }
+                div {
+                    p(class="font-semibold") { "Resources" }
+                    ul {
+                        li {
+                            a(href="/book/getting_started/installation") { "Book" }
+                        }
+                        li {
+                            a(href="https://docs.rs/sycamore") { "docs.rs" }
+                        }
+                    }
+                }
             }
+            p(class="mt-10 text-gray-700") { "© 2024 Sycamore" }
         }
     }
 }
