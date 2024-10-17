@@ -77,7 +77,7 @@ pub fn Layout(children: Children) -> View {
     view! {
         div(class="flex flex-col min-h-screen") {
             Header {}
-            main(class="mt-12 pb-10 flex-grow bg-gray-50") {
+            main(class="mt-12 flex-grow bg-gray-50") {
                 (children)
             }
             Footer {}
