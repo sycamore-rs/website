@@ -46,7 +46,7 @@ fn BookBody(section: String, #[prop(!optional)] doc: Option<String>) -> View {
         ServerTitle(title=title)
         div(class="flex flex-row gap-4 w-full justify-center") {
             BookSidebar {}
-            div(class="grow-0 min-w-0 px-2 pt-0 pb-10 sm:pt-5 prose prose-gray md:w-[75ch]") {
+            div(class="grow-0 min-w-0 px-2 pt-5 pb-10 prose prose-gray md:w-[75ch]") {
                 mdsycx::MDSycX(body=parsed.body)
             }
             HeadingsOutline(headings=parsed.headings)
