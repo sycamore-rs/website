@@ -347,7 +347,7 @@ checksum = "a7a70ba024b9dc04c27ea2f0c0548feb474ec5c54bba33a7f72f873a39d07b24"
 [[package]]
 name = "mdsycx"
 version = "0.1.0"
-source = "git+https://github.com/lukechu10/mdsycx?rev=abe96e1#abe96e1dd9fbc11bab839428c48d3ccf5f2c63ed"
+source = "git+https://github.com/lukechu10/mdsycx?rev=1a0786a#1a0786a1fa63f29d519c64440ec37e9dbdf1da69"
 dependencies = [
  "mdsycx-macro",
  "pulldown-cmark",
@@ -362,7 +362,7 @@ dependencies = [
 [[package]]
 name = "mdsycx-macro"
 version = "0.1.0"
-source = "git+https://github.com/lukechu10/mdsycx?rev=abe96e1#abe96e1dd9fbc11bab839428c48d3ccf5f2c63ed"
+source = "git+https://github.com/lukechu10/mdsycx?rev=1a0786a#1a0786a1fa63f29d519c64440ec37e9dbdf1da69"
 dependencies = [
  "proc-macro-error",
  "proc-macro2",
@@ -632,7 +632,7 @@ checksum = "3c5e1a9a646d36c3599cd173a41282daf47c44583ad367b8e6837255952e5c67"
 [[package]]
 name = "sycamore"
 version = "0.9.0-beta.4"
-source = "git+https://github.com/sycamore-rs/sycamore?rev=144e6b2#144e6b2741a012db1faed40fc7dcb355c74b9f87"
+source = "git+https://github.com/sycamore-rs/sycamore?rev=1821077#1821077c904b5311438b3ee68e48884e282fde70"
 dependencies = [
  "futures",
  "hashbrown 0.14.5",
@@ -651,7 +651,7 @@ dependencies = [
 [[package]]
 name = "sycamore-core"
 version = "0.9.0-beta.4"
-source = "git+https://github.com/sycamore-rs/sycamore?rev=144e6b2#144e6b2741a012db1faed40fc7dcb355c74b9f87"
+source = "git+https://github.com/sycamore-rs/sycamore?rev=1821077#1821077c904b5311438b3ee68e48884e282fde70"
 dependencies = [
  "hashbrown 0.14.5",
  "paste",
@@ -662,7 +662,7 @@ dependencies = [
 [[package]]
 name = "sycamore-futures"
 version = "0.9.0-beta.4"
-source = "git+https://github.com/sycamore-rs/sycamore?rev=144e6b2#144e6b2741a012db1faed40fc7dcb355c74b9f87"
+source = "git+https://github.com/sycamore-rs/sycamore?rev=1821077#1821077c904b5311438b3ee68e48884e282fde70"
 dependencies = [
  "futures",
  "pin-project",
@@ -675,7 +675,7 @@ dependencies = [
 [[package]]
 name = "sycamore-macro"
 version = "0.9.0-beta.4"
-source = "git+https://github.com/sycamore-rs/sycamore?rev=144e6b2#144e6b2741a012db1faed40fc7dcb355c74b9f87"
+source = "git+https://github.com/sycamore-rs/sycamore?rev=1821077#1821077c904b5311438b3ee68e48884e282fde70"
 dependencies = [
  "once_cell",
  "proc-macro2",
@@ -688,7 +688,7 @@ dependencies = [
 [[package]]
 name = "sycamore-reactive"
 version = "0.9.0-beta.4"
-source = "git+https://github.com/sycamore-rs/sycamore?rev=144e6b2#144e6b2741a012db1faed40fc7dcb355c74b9f87"
+source = "git+https://github.com/sycamore-rs/sycamore?rev=1821077#1821077c904b5311438b3ee68e48884e282fde70"
 dependencies = [
  "paste",
  "slotmap",
@@ -699,7 +699,7 @@ dependencies = [
 [[package]]
 name = "sycamore-router"
 version = "0.9.0-beta.4"
-source = "git+https://github.com/sycamore-rs/sycamore?rev=144e6b2#144e6b2741a012db1faed40fc7dcb355c74b9f87"
+source = "git+https://github.com/sycamore-rs/sycamore?rev=1821077#1821077c904b5311438b3ee68e48884e282fde70"
 dependencies = [
  "sycamore",
  "sycamore-router-macro",
@@ -710,7 +710,7 @@ dependencies = [
 [[package]]
 name = "sycamore-router-macro"
 version = "0.9.0-beta.4"
-source = "git+https://github.com/sycamore-rs/sycamore?rev=144e6b2#144e6b2741a012db1faed40fc7dcb355c74b9f87"
+source = "git+https://github.com/sycamore-rs/sycamore?rev=1821077#1821077c904b5311438b3ee68e48884e282fde70"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -720,7 +720,7 @@ dependencies = [
 [[package]]
 name = "sycamore-view-parser"
 version = "0.9.0-beta.4"
-source = "git+https://github.com/sycamore-rs/sycamore?rev=144e6b2#144e6b2741a012db1faed40fc7dcb355c74b9f87"
+source = "git+https://github.com/sycamore-rs/sycamore?rev=1821077#1821077c904b5311438b3ee68e48884e282fde70"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -730,7 +730,7 @@ dependencies = [
 [[package]]
 name = "sycamore-web"
 version = "0.9.0-beta.4"
-source = "git+https://github.com/sycamore-rs/sycamore?rev=144e6b2#144e6b2741a012db1faed40fc7dcb355c74b9f87"
+source = "git+https://github.com/sycamore-rs/sycamore?rev=1821077#1821077c904b5311438b3ee68e48884e282fde70"
 dependencies = [
  "async-stream",
  "futures",
