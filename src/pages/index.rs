@@ -24,7 +24,7 @@ fn IndexBody() -> View {
         div(class="flex flex-col container px-2 mx-auto pb-10") {
             div(class="mt-10 md:mt-20 flex flex-col md:flex-row gap-10 items-center justify-between") {
                 div(class="max-w-[530px]") {
-                    h1(class="text-5xl pb-5 font-bold bg-gradient-to-br from-orange-800 from-20% to-orange-800 to-80% via-orange-950 text-transparent bg-clip-text") {
+                    h1(class="text-4xl sm:text-5xl pb-5 font-bold bg-gradient-to-br from-orange-800 from-20% to-orange-800 to-80% via-orange-950 text-transparent bg-clip-text") {
                         "Reactive Apps with"
                         br {}
                         "Effortless Performance."

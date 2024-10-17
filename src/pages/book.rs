@@ -32,7 +32,7 @@ fn BookBody(section: String, #[prop(!optional)] doc: Option<String>) -> View {
         .clone();
 
     view! {
-        div(class="flex flex-row space-x-4") {
+        div(class="flex flex-row gap-4 w-full") {
             BookSidebar {}
             div(class="flex-1 px-2 pt-0 pb-10 sm:pt-5 prose prose-gray") {
                 mdsycx::MDSycX(body=parsed.body)
