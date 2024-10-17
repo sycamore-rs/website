@@ -14,6 +14,13 @@ module.exports = {
 			zIndex: {
 				neg: -1,
 			},
+			typography: (theme) => ({
+				DEFAULT: {
+					css: {
+						maxWidth: "75ch",
+					},
+				},
+			}),
 		},
 		colors: {
 			transparent: "transparent",

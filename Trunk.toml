@@ -1,10 +1,18 @@
 [build]
 filehash = false
 
+[watch]
+ignore = ["target_ssr"]
+
 [serve]
 no_spa = true
 
 [[hooks]]
+stage = "build"
+command = "cargo"
+command_arguments = ["build", "--target-dir", "target_ssr/"]
+
+[[hooks]]
 stage = "post_build"
 command = "cargo"
-command_arguments = ["run"]
+command_arguments = ["run", "--target-dir", "target_ssr/"]
