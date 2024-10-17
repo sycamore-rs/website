@@ -34,7 +34,7 @@ fn BookBody(section: String, #[prop(!optional)] doc: Option<String>) -> View {
     view! {
         div(class="flex flex-row gap-4 w-full") {
             BookSidebar {}
-            div(class="flex-1 px-2 pt-0 pb-10 sm:pt-5 prose prose-gray") {
+            div(class="grow-0 min-w-0 mx-auto px-2 pt-0 pb-10 sm:pt-5 prose prose-gray") {
                 mdsycx::MDSycX(body=parsed.body)
             }
         }
