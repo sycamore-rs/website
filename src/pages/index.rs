@@ -199,11 +199,11 @@ fn NewsList() -> View {
         .rev()
         .map(|(id, post)| {
             view! {
-                div(class="mt-5") {
+                a(href=format!("/post/{id}"), class="mt-5") {
                     p(class="text-xs") {
                         (post.front_matter.date.to_string())
                     }
-                    a(href=format!("/post/{id}"), class="text-2xl font-semibold") {
+                    p(class="text-2xl font-semibold") {
                         (post.front_matter.title.clone())
                     }
                     p(class="text-gray-800") {

@@ -56,7 +56,7 @@ fn BookSidebar() -> View {
                 .map(|item| {
                     view! {
                         li {
-                            a(href=format!("/book/{}", item.href)) { (item.name) }
+                            a(href=format!("/book/{}", item.href), class="hover:text-orange-700 transition-colors") { (item.name) }
                         }
                     }
                 })
