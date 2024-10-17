@@ -34,7 +34,7 @@ fn BookBody(section: String, #[prop(!optional)] doc: Option<String>) -> View {
     view! {
         div(class="flex flex-row gap-4 w-full justify-center") {
             BookSidebar {}
-            div(class="grow-0 min-w-0 px-2 pt-0 pb-10 sm:pt-5 prose prose-gray") {
+            div(class="grow-0 min-w-0 px-2 pt-0 pb-10 sm:pt-5 prose prose-gray md:w-[75ch]") {
                 mdsycx::MDSycX(body=parsed.body)
             }
             HeadingsOutline(headings=parsed.headings)
@@ -116,7 +116,10 @@ fn HeadingsOutline(headings: Vec<mdsycx::OutlineHeading>) -> View {
                 }
             }
             div {
-                p(class="font-bold mt-4") { "Previous versions" }
+                p(class="font-bold mt-6") { "Current version" span(class="font-semibold") { ": v0.9" } }
+            }
+            div {
+                p(class="font-bold mt-2") { "Previous versions" }
                 ul(class="pl-2 font-semibold mt-1") {
                     li {
                         a(class="hover:text-orange-700", href="https://sycamore-rs.netlify.app/docs/v0.8/getting_started/installation") {
