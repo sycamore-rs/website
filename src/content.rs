@@ -13,8 +13,7 @@ pub struct PostFrontmatter {
 
 #[derive(Debug, Clone, Deserialize)]
 pub struct DocFrontmatter {
-    #[serde(default)]
-    pub title: String,
+    pub title: Option<String>,
 }
 
 #[derive(Debug, Default, Clone, Copy, PartialEq, Eq, Hash)]

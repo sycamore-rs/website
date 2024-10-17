@@ -26,12 +26,24 @@ fn BookBody(section: String, #[prop(!optional)] doc: Option<String>) -> View {
 #[cfg_ssr]
 #[component(inline_props)]
 fn BookBody(section: String, #[prop(!optional)] doc: Option<String>) -> View {
+    use crate::server_component::ServerTitle;
+
     let parsed = crate::content::DOCS
         .get(&(section.clone(), doc.clone()))
         .expect("doc not found")
         .clone();
 
+    let title = match parsed.front_matter.title {
+        Some(title) => title,
+        None => parsed
+            .headings
+            .first()
+            .map(|heading| heading.text.clone())
+            .unwrap_or("Title Missing".to_string()),
+    };
+
     view! {
+        ServerTitle(title=title)
         div(class="flex flex-row gap-4 w-full justify-center") {
             BookSidebar {}
             div(class="grow-0 min-w-0 px-2 pt-0 pb-10 sm:pt-5 prose prose-gray md:w-[75ch]") {

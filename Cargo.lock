@@ -758,6 +758,7 @@ dependencies = [
  "serde_json",
  "sycamore",
  "sycamore-router",
+ "web-sys",
 ]
 
 [[package]]

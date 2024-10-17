@@ -1,9 +1,10 @@
 use sycamore::prelude::*;
 
-use crate::server_component::ServerOnly;
+use crate::{server_component::ServerOnly, set_title};
 
 #[component]
 pub fn Index() -> View {
+    set_title("Sycamore");
     view! {
         ServerOnly(id="IndexBody".to_string(), on_mount=move || { crate::utils::prism_highlight_all(); }) {
             IndexBody {}

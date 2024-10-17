@@ -20,15 +20,41 @@ pub enum Routes {
     NotFound,
 }
 
+/// Context value for setting the document title.
+/// Also renders a `<title>` tag in SSR.
+#[derive(Debug, Clone, Copy)]
+struct Title(Signal<String>);
+
+/// Set the document title.
+pub fn set_title(title: impl Into<String>) {
+    use_context::<Title>().0.set(title.into());
+}
+
 #[component(inline_props)]
 pub fn Shell(children: Children) -> View {
+    let title = Title(create_signal(String::new()));
+    provide_context(title);
+
+    if is_not_ssr!() {
+        create_effect(move || {
+            let title = title.0.get_clone();
+            if !title.is_empty() {
+                document().set_title(&title);
+            }
+        });
+    }
+
     let children = children.call();
+    let title_static = title.0.get_clone();
+
     view! {
         html {
             sycamore::web::NoHydrate {
                 head {
                     meta(charset="utf-8")
                     meta(name="viewport", content="width=device-width, initial-scale=1")
+
+                    title { (title_static) }
 
                     link(rel="preload", href="/sycamore-website.js", r#as="script", crossorigin="")
                     link(rel="preload", href="/sycamore-website_bg.wasm", r#as="fetch", crossorigin="")
@@ -64,7 +90,7 @@ pub fn App(route: ReadSignal<Routes>) -> View {
                 Routes::Post(id) => view! { pages::post::Post(id=id) },
                 Routes::BookSection(section) => view! { pages::book::Book(section=section) },
                 Routes::BookDoc(section, doc) => view! { pages::book::Book(section=section, doc=doc) },
-                Routes::NotFound => pages::not_found::NotFound(),
+                Routes::NotFound =>  { pages::not_found::NotFound() },
             })
         }
     }
