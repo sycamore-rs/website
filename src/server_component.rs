@@ -18,8 +18,10 @@ pub static SERVER_COMPONENTS: LazyLock<Mutex<ServerComponentMap>> = LazyLock::ne
 /// will fetch the component HTML over HTTP.
 #[component(inline_props)]
 pub fn ServerOnly(
+    /// The unique id of the server component.
     id: String,
     children: Children,
+    /// A function to run when the component mounts.
     #[prop(default, setter(transform = |f: impl Fn() + 'static| Some(Box::new(f) as Box<dyn Fn()>)))]
     on_mount: Option<Box<dyn Fn()>>,
 ) -> View {

@@ -49,8 +49,10 @@ fn BookBody(section: String, #[prop(!optional)] doc: Option<String>) -> View {
 
     view! {
         ServerTitle(title=title)
-        div(class="flex flex-row gap-4 w-full justify-center") {
-            BookSidebar(section=section, doc=doc)
+        div(class="flex flex-row gap-0 sm:gap-4 w-full justify-center") {
+            div(class="flex-none w-44 pt-8 pb-5 px-2 space-y-2 text-sm sticky top-12 max-h-[calc(100vh-3rem)] overflow-y-auto block -ml-44 sm:ml-0") {
+                BookSidebar(section=section, doc=doc)
+            }
             div(class="grow-0 min-w-0 px-2 pt-5 pb-10 prose md:w-[80ch] prose-headings:scroll-mt-12") {
                 mdsycx::MDSycX(body=parsed.body)
 
@@ -76,7 +78,7 @@ fn BookSidebar(section: String, #[prop(!optional)] doc: Option<String>) -> View 
         None => format!("/book/{}", section),
     };
 
-    let view = sidebar
+    sidebar
         .sections
         .into_iter()
         .map(|section| {
@@ -106,15 +108,8 @@ fn BookSidebar(section: String, #[prop(!optional)] doc: Option<String>) -> View 
                 }
             }
         })
-        .collect::<Vec<_>>();
-
-    view! {
-        div(
-            class="flex-none w-44 pt-8 pb-5 px-2 space-y-2 text-sm sticky top-12 max-h-[calc(100vh-3rem)] overflow-y-auto hidden sm:block"
-        ) {
-            (view)
-        }
-    }
+        .collect::<Vec<_>>()
+        .into()
 }
 
 #[cfg_ssr]

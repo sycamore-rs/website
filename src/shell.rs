@@ -84,8 +84,13 @@ pub fn Shell(children: Children) -> View {
     }
 }
 
+/// A context value for storing the current route.
+#[derive(Debug, Clone, Copy)]
+pub struct CurrentRoute(pub ReadSignal<Routes>);
+
 #[component]
 pub fn App(route: ReadSignal<Routes>) -> View {
+    provide_context(CurrentRoute(route));
     view! {
         layout::Layout {
             (match route.get_clone() {

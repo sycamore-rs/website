@@ -1,14 +1,32 @@
 use sycamore::prelude::*;
 
-#[component]
-fn Header() -> View {
+use crate::{CurrentRoute, Routes};
+
+#[component(inline_props)]
+fn Header(show_menu: ReadSignal<bool>, menu_open: Signal<bool>) -> View {
+    let toggle_menu = move |_| menu_open.set(!menu_open.get());
     view! {
         header(class="fixed top-0 z-50 w-full border-b-2 border-gray-200 bg-gray-100") {
             nav(class="px-4") {
                 div(class="flex flex-row justify-between items-center h-12") {
-                    a(class="flex flex-row items-center hover:underline font-semibold", href="/") {
-                        img(src="/logo.svg", alt="Sycamore Logo", class="h-10 w-10 mr-2")
-                        "Sycamore"
+                    div(class="flex flex-row gap-4") {
+                        (if show_menu.get() {
+                            view! {
+                                button(class="inline-block sm:hidden hover:text-gray-600", r#type="button", on:click=toggle_menu) {
+                                    (if menu_open.get() {
+                                        view! { i(class="bi bi-x-lg", aria-label="Close menu") }
+                                    } else {
+                                        view! { i(class="bi bi-list", aria-label="Open menu") }
+                                    })
+                                }
+                            }
+                        } else {
+                            view! {}
+                        })
+                        a(class="flex flex-row items-center hover:underline font-semibold", href="/") {
+                            img(src="/logo.svg", alt="Sycamore Logo", class="h-10 w-10 mr-2")
+                            "Sycamore"
+                        }
                     }
                     div(class="flex flex-row space-x-4 md:space-x-6 text-xl") {
                         a(href="/book/getting_started/installation") {
@@ -76,12 +94,21 @@ fn Footer() -> View {
 
 #[component(inline_props)]
 pub fn Layout(children: Children) -> View {
+    let current_route = use_context::<CurrentRoute>();
+
     let children = children.call();
+    
+    let menu_open = create_signal(false);
+    // Show the menu only on book pages.
+    let show_menu = create_selector(move || matches!(current_route.0.get_clone(), Routes::BookDoc(_, _) | Routes::BookSection(_)));
+
     view! {
         div(class="flex flex-col min-h-screen") {
-            Header {}
+            Header(menu_open=menu_open, show_menu=show_menu)
             main(class="mt-12 flex-grow bg-gray-50") {
-                (children)
+                div(class=if menu_open.get() { "transition-transform translate-x-44" } else { "transition-transform" }) {
+                    (children)
+                }
             }
             Footer {}
         }
