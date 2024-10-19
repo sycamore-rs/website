@@ -28,7 +28,7 @@ fn Header(show_menu: ReadSignal<bool>, menu_open: Signal<bool>) -> View {
                             "Sycamore"
                         }
                     }
-                    div(class="flex flex-row space-x-4 md:space-x-6 text-xl") {
+                    div(class="flex flex-row space-x-6 text-xl") {
                         a(href="/book/getting_started/installation") {
                             i(class="bi bi-book-half hover:text-gray-600", aria-label="Book")
                         }
