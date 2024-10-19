@@ -30,7 +30,7 @@ pub fn PostBody(id: String) -> View {
 
     view! {
         ServerTitle(title=parsed.front_matter.title.clone())
-        div(class="mx-auto px-2 pt-5 pb-10 prose prose-gray") {
+        div(class="mx-auto px-2 pt-5 pb-10 prose") {
             span(class="text-sm") { (parsed.front_matter.date.to_string()) }
             mdsycx::MDSycX(body=parsed.body)
         }

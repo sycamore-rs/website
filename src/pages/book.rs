@@ -51,7 +51,7 @@ fn BookBody(section: String, #[prop(!optional)] doc: Option<String>) -> View {
         ServerTitle(title=title)
         div(class="flex flex-row gap-4 w-full justify-center") {
             BookSidebar(section=section, doc=doc)
-            div(class="grow-0 min-w-0 px-2 pt-5 pb-10 prose prose-gray md:w-[80ch] prose-headings:scroll-mt-12") {
+            div(class="grow-0 min-w-0 px-2 pt-5 pb-10 prose md:w-[80ch] prose-headings:scroll-mt-12") {
                 mdsycx::MDSycX(body=parsed.body)
 
                 div(class="mt-6 mr-2 text-right") {

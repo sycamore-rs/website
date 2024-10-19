@@ -18,6 +18,14 @@ module.exports = {
 				DEFAULT: {
 					css: {
 						maxWidth: "80ch",
+						"--tw-prose-pre-bg": theme("colors.codeblock"),
+						"--tw-prose-pre-code": theme("colors.codeblock-code"),
+						pre: {
+							// Keep in sync with PrismJS theme.
+							padding: "1em",
+							margin: "0.5em 0",
+							"line-height": "1.5",
+						},
 					},
 				},
 			}),
@@ -32,6 +40,9 @@ module.exports = {
 			amber: colors.amber,
 			yellow: colors.yellow,
 			white: colors.white,
+			// Keep in sync with PrismJS theme.
+			codeblock: "#1d2021",
+			"codeblock-code": "#ebdbb2",
 		},
 	},
 	plugins: [typography],
