@@ -10,12 +10,15 @@ fn Header() -> View {
                         img(src="/logo.svg", alt="Sycamore Logo", class="h-10 w-10 mr-2")
                         "Sycamore"
                     }
-                    div(class="flex flex-row space-x-4") {
+                    div(class="flex flex-row space-x-4 md:space-x-6 text-xl") {
+                        a(href="/book/getting_started/installation") {
+                            i(class="bi bi-book-half hover:text-gray-600", aria-label="Book")
+                        }
                         a(href="https://github.com/sycamore-rs/sycamore") {
-                            i(class="bi bi-github text-2xl hover:text-gray-600", aria-label="GitHub")
+                            i(class="bi bi-github hover:text-gray-600", aria-label="GitHub")
                         }
                         a(href="https://discord.gg/vDwFUmm6mU") {
-                            i(class="bi bi-discord text-2xl hover:text-gray-600", aria-label="Discord")
+                            i(class="bi bi-discord hover:text-gray-600", aria-label="Discord")
                         }
                     }
                 }
