@@ -42,12 +42,24 @@ fn BookBody(section: String, #[prop(!optional)] doc: Option<String>) -> View {
             .unwrap_or("Title Missing".to_string()),
     };
 
+    let github_edit_link = match doc {
+        Some(doc) => format!("https://github.com/sycamore-rs/sycamore/edit/main/docs/next/{section}/{doc}.md"),
+        None => format!("https://github.com/sycamore-rs/sycamore/edit/main/docs/next/{section}.md"),
+    };
+
     view! {
         ServerTitle(title=title)
         div(class="flex flex-row gap-4 w-full justify-center") {
             BookSidebar {}
             div(class="grow-0 min-w-0 px-2 pt-5 pb-10 prose prose-gray md:w-[80ch] prose-headings:scroll-mt-12") {
                 mdsycx::MDSycX(body=parsed.body)
+
+                div(class="mt-6 mr-2 text-right") {
+                    a(class="text-sm", href=github_edit_link) {
+                        i(class="bi bi-pencil mr-2")
+                        "Edit this page on GitHub"
+                    }
+                }
             }
             HeadingsOutline(headings=parsed.headings)
         }
