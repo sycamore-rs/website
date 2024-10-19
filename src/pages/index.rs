@@ -145,7 +145,7 @@ fn Counter(initial: i32) -> View {
             }
 
 
-            SectionHeading(content="News")
+            SectionHeading(content="News", id="news")
             NewsList {}
         }
     }
@@ -153,9 +153,9 @@ fn Counter(initial: i32) -> View {
 
 #[cfg_ssr]
 #[component(inline_props)]
-fn SectionHeading(content: &'static str) -> View {
+fn SectionHeading(content: &'static str, #[prop(attributes(html, h2))] attributes: Attributes) -> View {
     view! {
-        h2(class="text-4xl text-center font-bold mt-20 mb-5") {
+        h2(class="text-4xl text-center font-bold mt-20 mb-5", ..attributes) {
             (content)
         }
     }

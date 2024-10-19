@@ -8,4 +8,8 @@
   body {
     @apply scroll-smooth;
   }
+
+  * {
+    @apply scroll-mt-12;
+  }
 }
