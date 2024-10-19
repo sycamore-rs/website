@@ -1,4 +1,4 @@
-# <sycamore.dev>
+# [sycamore.dev](https://sycamore.dev)
 
 This is the official website for [Sycamore](https://github.com/sycamore-rs/sycamore). This site hosts docs and blog posts for Sycamore.
 
