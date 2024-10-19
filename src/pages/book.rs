@@ -42,7 +42,7 @@ fn BookBody(section: String, #[prop(!optional)] doc: Option<String>) -> View {
             .unwrap_or("Title Missing".to_string()),
     };
 
-    let github_edit_link = match doc {
+    let github_edit_link = match &doc {
         Some(doc) => format!("https://github.com/sycamore-rs/sycamore/edit/main/docs/next/{section}/{doc}.md"),
         None => format!("https://github.com/sycamore-rs/sycamore/edit/main/docs/next/{section}.md"),
     };
@@ -50,7 +50,7 @@ fn BookBody(section: String, #[prop(!optional)] doc: Option<String>) -> View {
     view! {
         ServerTitle(title=title)
         div(class="flex flex-row gap-4 w-full justify-center") {
-            BookSidebar {}
+            BookSidebar(section=section, doc=doc)
             div(class="grow-0 min-w-0 px-2 pt-5 pb-10 prose prose-gray md:w-[80ch] prose-headings:scroll-mt-12") {
                 mdsycx::MDSycX(body=parsed.body)
 
@@ -67,9 +67,14 @@ fn BookBody(section: String, #[prop(!optional)] doc: Option<String>) -> View {
 }
 
 #[cfg_ssr]
-#[component]
-fn BookSidebar() -> View {
+#[component(inline_props)]
+fn BookSidebar(section: String, #[prop(!optional)] doc: Option<String>) -> View {
     let sidebar = crate::content::BOOK_SIDEBAR.clone();
+    
+    let current_href = match &doc {
+        Some(doc) => format!("/book/{}/{}", section, doc),
+        None => format!("/book/{}", section),
+    };
 
     let view = sidebar
         .sections
@@ -79,9 +84,15 @@ fn BookSidebar() -> View {
                 .items
                 .into_iter()
                 .map(|item| {
+                    let href = format!("/book/{}", item.href);
+                    let class = if href == current_href {
+                        "text-orange-700"
+                    } else {
+                        "hover:text-orange-700 transition-colors"
+                    };
                     view! {
                         li(class="mt-0.5") {
-                            a(href=format!("/book/{}", item.href), class="hover:text-orange-700 transition-colors") { (item.name) }
+                            a(href=href, class=class) { (item.name) }
                         }
                     }
                 })
