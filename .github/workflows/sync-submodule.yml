@@ -15,6 +15,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           submodules: true
+          token: ${{ secrets.CI_TOKEN }}
 
       - name: update submodule git references
         run: |
