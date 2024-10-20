@@ -19,7 +19,5 @@ tokio = { version = "1.40.0", features = ["full"] }
 
 [patch.crates-io]
 mdsycx = { git = "https://github.com/lukechu10/mdsycx", rev = "1a0786a" }
-# sycamore = { git = "https://github.com/sycamore-rs/sycamore", rev = "eeaf25d" }
-# sycamore-router = { git = "https://github.com/sycamore-rs/sycamore", rev = "eeaf25d" }
-sycamore = { path = "../sycamore/packages/sycamore" }
-sycamore-router = { path = "../sycamore/packages/sycamore-router" }
+sycamore = { git = "https://github.com/sycamore-rs/sycamore", rev = "9f06fd5" }
+sycamore-router = { git = "https://github.com/sycamore-rs/sycamore", rev = "9f06fd5" }
