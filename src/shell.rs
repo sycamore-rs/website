@@ -41,7 +41,6 @@ pub fn Shell(children: Children) -> View {
         });
     }
 
-    let children = children.call();
     let title_static = title.0.get_clone();
 
     view! {
@@ -72,6 +71,8 @@ pub fn Shell(children: Children) -> View {
 
                     // Analytics
                     script(defer=true, src="https://sycamore-analytics.netlify.app/script.js", data-website-id="e539dd59-791b-44a2-9df4-18db88d9cb80")
+
+                    sycamore::web::HydrationScript {}
                 }
             }
             body {

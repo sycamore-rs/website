@@ -96,8 +96,6 @@ fn Footer() -> View {
 pub fn Layout(children: Children) -> View {
     let current_route = use_context::<CurrentRoute>();
 
-    let children = children.call();
-    
     let menu_open = create_signal(false);
     // Show the menu only on book pages.
     let show_menu = create_selector(move || matches!(current_route.0.get_clone(), Routes::BookSubsection(_, _) | Routes::BookSection(_)));

@@ -18,7 +18,8 @@ pub static DOCS_DIR: &str = match option_env!("DOCS_DIR") {
 };
 
 #[cfg_ssr]
-fn main() {
+#[tokio::main]
+async fn main() {
     use std::{fs, path::PathBuf};
 
     static PUBLIC_PATH: &str = "dist/.stage";
@@ -29,13 +30,13 @@ fn main() {
 
         eprintln!("Rendering `{}`", path.display());
 
-        let html = sycamore::render_to_string(|| {
+        let html = sycamore::render_to_string_await_suspense(|| {
             view! {
                 Shell {
                     sycamore_router::StaticRouter(route=route, view=App)
                 }
             }
-        });
+        }).await;
 
         let dir = path.parent().expect("failed to get parent dir");
         fs::create_dir_all(dir).expect("failed to create parent dir");

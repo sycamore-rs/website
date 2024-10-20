@@ -5,7 +5,7 @@ use crate::server_component::ServerOnly;
 #[component(inline_props)]
 pub fn Post(id: String) -> View {
     view! {
-        ServerOnly(id=format!("Post_{id}"), on_mount=|| { crate::utils::prism_highlight_all(); }) {
+        ServerOnly(id=format!("Post_{id}"), on_load=|| { crate::utils::prism_highlight_all(); }) {
             PostBody(id=id)
         }
     }

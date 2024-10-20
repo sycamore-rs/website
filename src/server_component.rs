@@ -21,12 +21,12 @@ pub fn ServerOnly(
     /// The unique id of the server component.
     id: String,
     children: Children,
-    /// A function to run when the component mounts.
+    /// A function to run when the component loads.
     #[prop(default, setter(transform = |f: impl Fn() + 'static| Some(Box::new(f) as Box<dyn Fn()>)))]
-    on_mount: Option<Box<dyn Fn()>>,
+    on_load: Option<Box<dyn Fn()>>,
 ) -> View {
     is_ssr! {
-        let _ = on_mount;
+        let _ = on_load;
         // Render the children, as well as adding it to SERVER_COMPONENTS.
         let mut children = Some(children);
         let view = view! {
@@ -65,8 +65,8 @@ pub fn ServerOnly(
                     document().body().unwrap().append_child(&new_script.as_html_node().as_web_sys()).unwrap();
                 }
 
-                if let Some(on_mount) = on_mount {
-                    on_mount();
+                if let Some(on_load) = on_load {
+                    on_mount(on_load);
                 }
             });
         }

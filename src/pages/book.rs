@@ -9,8 +9,10 @@ pub fn Book(section: String, doc: Option<String>) -> View {
         None => format!("Book_{section}"),
     };
     view! {
-        ServerOnly(id=id, on_mount=|| { crate::utils::prism_highlight_all(); }) {
-            BookBody(section=section, doc=doc)
+        sycamore::web::Transition {
+            ServerOnly(id=id, on_load=|| { crate::utils::prism_highlight_all(); }) {
+                BookBody(section=section, doc=doc)
+            }
         }
     }
 }
