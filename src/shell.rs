@@ -7,15 +7,12 @@ use crate::{layout, pages};
 pub enum Routes {
     #[to("/")]
     Index,
-    #[to("/index.html")]
-    IndexHtml,
     #[to("/post/<id>")]
     Post(String),
     #[to("/book/<section>")]
     BookSection(String),
     #[to("/book/<section>/<doc>")]
-    BookDoc(String, String),
-    #[to("/404.html")]
+    BookSubsection(String, String),
     #[not_found]
     NotFound,
 }
@@ -94,10 +91,10 @@ pub fn App(route: ReadSignal<Routes>) -> View {
     view! {
         layout::Layout {
             (match route.get_clone() {
-                Routes::Index | Routes::IndexHtml => pages::index::Index(),
+                Routes::Index => pages::index::Index(),
                 Routes::Post(id) => view! { pages::post::Post(id=id) },
                 Routes::BookSection(section) => view! { pages::book::Book(section=section) },
-                Routes::BookDoc(section, doc) => view! { pages::book::Book(section=section, doc=doc) },
+                Routes::BookSubsection(section, doc) => view! { pages::book::Book(section=section, doc=doc) },
                 Routes::NotFound =>  { pages::not_found::NotFound() },
             })
         }

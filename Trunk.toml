@@ -3,6 +3,8 @@ filehash = false
 
 [watch]
 ignore = ["target_ssr"]
+# Local version of Sycamore
+watch = ["../sycamore/docs"]
 
 [serve]
 no_spa = true

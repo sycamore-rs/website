@@ -29,29 +29,22 @@ fn BookBody(section: String, #[prop(!optional)] doc: Option<String>) -> View {
     use crate::server_component::ServerTitle;
 
     let parsed = crate::content::DOCS
-        .get(&(section.clone(), doc.clone()))
+        .get(&crate::content::DocPage::new(section.clone(), doc.clone()))
         .expect("doc not found")
         .clone();
 
-    let title = match parsed.front_matter.title {
-        Some(title) => title,
-        None => parsed
-            .headings
-            .first()
-            .map(|heading| heading.text.clone())
-            .unwrap_or("Title Missing".to_string()),
-    };
-
     let github_edit_link = match &doc {
-        Some(doc) => format!("https://github.com/sycamore-rs/sycamore/edit/main/docs/next/{section}/{doc}.md"),
+        Some(doc) => format!(
+            "https://github.com/sycamore-rs/sycamore/edit/main/docs/next/{section}/{doc}.md"
+        ),
         None => format!("https://github.com/sycamore-rs/sycamore/edit/main/docs/next/{section}.md"),
     };
 
     view! {
-        ServerTitle(title=title)
+        ServerTitle(title=parsed.front_matter.title)
         div(class="flex flex-row gap-0 sm:gap-4 w-full justify-center") {
             div(class="flex-none w-44 pt-8 pb-5 px-2 space-y-2 text-sm sticky top-12 max-h-[calc(100vh-3rem)] overflow-y-auto block -ml-44 sm:ml-0") {
-                BookSidebar(section=section, doc=doc)
+                BookIndex(section=section, doc=doc)
             }
             div(class="grow-0 min-w-0 px-2 pt-5 pb-10 prose md:w-[80ch]") {
                 mdsycx::MDSycX(body=parsed.body)
@@ -70,23 +63,28 @@ fn BookBody(section: String, #[prop(!optional)] doc: Option<String>) -> View {
 
 #[cfg_ssr]
 #[component(inline_props)]
-fn BookSidebar(section: String, #[prop(!optional)] doc: Option<String>) -> View {
-    let sidebar = crate::content::BOOK_SIDEBAR.clone();
-    
+fn BookIndex(section: String, #[prop(!optional)] doc: Option<String>) -> View {
+    use crate::content::BOOK_INDEX;
+
     let current_href = match &doc {
         Some(doc) => format!("/book/{}/{}", section, doc),
         None => format!("/book/{}", section),
     };
 
-    sidebar
+    BOOK_INDEX
+        .clone()
         .sections
         .into_iter()
         .map(|section| {
             let items = section
-                .items
+                .subsections
                 .into_iter()
                 .map(|item| {
-                    let href = format!("/book/{}", item.href);
+                    let href = format!(
+                        "/book/{}/{}",
+                        item.path.section(),
+                        item.path.subsection().unwrap()
+                    );
                     let class = if href == current_href {
                         "text-orange-700"
                     } else {
@@ -94,14 +92,20 @@ fn BookSidebar(section: String, #[prop(!optional)] doc: Option<String>) -> View 
                     };
                     view! {
                         li(class="mt-0.5") {
-                            a(href=href, class=class) { (item.name) }
+                            a(href=href, class=class) { (item.title) }
                         }
                     }
                 })
                 .collect::<Vec<_>>();
+            let href = format!("/book/{}", section.path.section());
+            let class = if href == current_href {
+                "font-semibold text-orange-700"
+            } else {
+                "font-semibold hover:text-orange-700 transition-colors"
+            };
             view! {
                 div {
-                    a(class="font-semibold") { (section.title.clone()) }
+                    a(class=class, href=href) { (section.title) }
                     ul(class="ml-4") {
                         (items)
                     }

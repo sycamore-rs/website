@@ -35,7 +35,7 @@ fn IndexBody() -> View {
                     }
 
                     div(class="flex flex-row flex-wrap gap-4 font-semibold mt-10") {
-                        a(class="block px-5 py-1.5 min-w-40 text-center bg-orange-400 rounded-full hover:bg-orange-500 transition-colors", href="/book/getting_started/installation", data-umami-event="Read book") {
+                        a(class="block px-5 py-1.5 min-w-40 text-center bg-orange-400 rounded-full hover:bg-orange-500 transition-colors", href="/book/introduction", data-umami-event="Read book") {
                             "Read the Book"
                         }
                         a(class="block px-5 py-1.5 min-w-40 text-center text-white bg-gray-800 rounded-full hover:bg-gray-900 transition-colors", href="https://discord.gg/vDwFUmm6mU", data-umami-event="Join discord") {

@@ -1,8 +1,11 @@
 use mdsycx::ParseRes;
 use serde::Deserialize;
 
-use std::{collections::HashMap, fmt::Display, fs, str::FromStr, sync::LazyLock};
+use std::{collections::HashMap, fmt::Display, fs, path::PathBuf, str::FromStr, sync::LazyLock};
 
+use crate::{Routes, DOCS_DIR};
+
+/// Frontmatter for a blog post.
 #[derive(Debug, Clone, Deserialize)]
 pub struct PostFrontmatter {
     pub title: String,
@@ -11,11 +14,17 @@ pub struct PostFrontmatter {
     pub date: Date,
 }
 
+/// Frontmatter for a documentation page.
 #[derive(Debug, Clone, Deserialize)]
 pub struct DocFrontmatter {
-    pub title: Option<String>,
+    /// The title of the doc page.
+    pub title: String,
+    /// Any subsections of the doc page.
+    #[serde(default)]
+    pub subsections: Vec<String>,
 }
 
+/// Represents a date in the format "YYYY-MM-DD".
 #[derive(Debug, Default, Clone, Copy, PartialEq, Eq, Hash)]
 pub struct Date {
     pub day: u32,
@@ -80,6 +89,128 @@ impl Display for Date {
     }
 }
 
+/// Represents the top-level sections of the book.
+///
+/// This is parsed from `sections.json`.
+#[derive(Debug, Clone, Deserialize)]
+pub struct SectionsJson {
+    pub sections: Vec<String>,
+}
+
+pub static SECTIONS_JSON: LazyLock<SectionsJson> = LazyLock::new(|| {
+    let sidebar_json = fs::read_to_string(format!("{DOCS_DIR}/next/sections.json"))
+        .expect("failed to read sections.json");
+    serde_json::from_str(&sidebar_json).expect("failed to parse sections.json")
+});
+
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct DocPage(String, Option<String>);
+
+impl DocPage {
+    pub fn new(section: String, doc: Option<String>) -> Self {
+        Self(section, doc)
+    }
+
+    pub fn section(&self) -> &str {
+        &self.0
+    }
+
+    pub fn subsection(&self) -> Option<&str> {
+        self.1.as_deref()
+    }
+}
+
+fn parse_doc<T>(path: &str) -> ParseRes<T>
+where
+    T: for<'a> Deserialize<'a> + 'static,
+{
+    let full_path = PathBuf::from(DOCS_DIR).join(path).with_extension("md");
+
+    let md = fs::read_to_string(&full_path).expect("failed to read md file");
+    mdsycx::parse(&md)
+        .unwrap_or_else(|err| panic!("failed to parse md file `{}`: {err:?}", full_path.display()))
+}
+
+pub static DOCS: std::sync::LazyLock<HashMap<DocPage, ParseRes<DocFrontmatter>>> =
+    LazyLock::new(|| {
+        let mut docs = HashMap::new();
+
+        // First parse all the top-level sections. Add any subsectiosn to a buffer to be parsed
+        // later.
+        let mut subsections = Vec::new();
+
+        for section in SECTIONS_JSON.sections.iter() {
+            let doc = parse_doc::<DocFrontmatter>(&format!("next/{section}"));
+            // Add subsections to buffer.
+            subsections.extend(
+                doc.front_matter
+                    .subsections
+                    .iter()
+                    .map(|s| (section.clone(), s.clone())),
+            );
+            docs.insert(DocPage::new(section.clone(), None), doc);
+        }
+
+        for (section, subsection) in subsections {
+            let doc = parse_doc::<DocFrontmatter>(&format!("next/{section}/{subsection}"));
+            // Subsections don't have subsections.
+            if !doc.front_matter.subsections.is_empty() {
+                panic!("Subsections cannot have subsections: `{section}/{subsection}`");
+            } else {
+                docs.insert(DocPage::new(section, Some(subsection)), doc);
+            }
+        }
+        docs
+    });
+
+/// Stores all the information of the structure of the book.
+#[derive(Debug, Clone)]
+pub struct BookIndex {
+    pub sections: Vec<BookSection>,
+}
+
+#[derive(Debug, Clone)]
+pub struct BookSection {
+    pub title: String,
+    pub subsections: Vec<BookItem>,
+    pub path: DocPage,
+}
+
+#[derive(Debug, Clone)]
+pub struct BookItem {
+    pub title: String,
+    pub path: DocPage,
+}
+
+pub static BOOK_INDEX: LazyLock<BookIndex> = LazyLock::new(|| {
+    let mut sections = vec![];
+
+    for section in SECTIONS_JSON.sections.iter() {
+        let path = DocPage::new(section.clone(), None);
+        let doc = DOCS.get(&path).expect("failed to get doc");
+        let title = doc.front_matter.title.clone();
+        let subsections = doc
+            .front_matter
+            .subsections
+            .iter()
+            .map(|subsection| {
+                let path = DocPage::new(section.clone(), Some(subsection.clone()));
+                let doc = DOCS.get(&path).expect("failed to get doc");
+                let title = doc.front_matter.title.clone();
+                BookItem { title, path }
+            })
+            .collect();
+
+        sections.push(BookSection {
+            title,
+            subsections,
+            path,
+        })
+    }
+
+    BookIndex { sections }
+});
+
 pub static POSTS: std::sync::LazyLock<HashMap<String, ParseRes<PostFrontmatter>>> =
     LazyLock::new(|| {
         let mut posts = HashMap::new();
@@ -87,100 +218,42 @@ pub static POSTS: std::sync::LazyLock<HashMap<String, ParseRes<PostFrontmatter>>
         for entry in fs::read_dir("sycamore/docs/posts").expect("failed to read posts directory") {
             let entry = entry.expect("failed to read post entry");
             let path = entry.path();
-            let id = path
+            let name = path
                 .file_stem()
                 .expect("failed to get file stem")
                 .to_string_lossy();
-            let md = fs::read_to_string(&path).expect("failed to read post file");
 
-            let parsed = mdsycx::parse(&md).expect("failed to parse post file");
+            let post = parse_doc::<PostFrontmatter>(&format!("posts/{name}"));
 
-            posts.insert(id.to_string(), parsed);
+            posts.insert(name.to_string(), post);
         }
 
         posts
     });
 
-#[allow(clippy::type_complexity)]
-pub static DOCS: std::sync::LazyLock<HashMap<(String, Option<String>), ParseRes<DocFrontmatter>>> =
-    LazyLock::new(|| {
-        let mut docs = HashMap::new();
-
-        for entry in fs::read_dir("sycamore/docs/next").expect("failed to read docs directory") {
-            let entry = entry.expect("failed to read docs entry");
-            let section = entry.path();
-            let section_name = section
-                .file_stem()
-                .expect("failed to get doc section name")
-                .to_string_lossy();
-            if section.is_dir() {
-                // Get sub-section docs.
-                for entry in fs::read_dir(&section).expect("failed to read docs directory") {
-                    let entry = entry.expect("failed to read docs entry");
-                    let doc = entry.path();
-                    let doc_name = doc
-                        .file_stem()
-                        .expect("failed to get doc name")
-                        .to_string_lossy();
-                    let md = fs::read_to_string(&doc).expect("failed to read docs file");
-
-                    let parsed = mdsycx::parse(&md).expect("failed to parse docs file");
-
-                    docs.insert(
-                        (section_name.to_string(), Some(doc_name.to_string())),
-                        parsed,
-                    );
-                }
-            } else {
-                // Get section doc.
-                let md = fs::read_to_string(&section).expect("failed to read docs file");
-
-                let parsed = mdsycx::parse(&md).expect("failed to parse docs file");
-
-                docs.insert((section_name.to_string(), None), parsed);
-            }
-        }
-
-        docs
-    });
-
-#[derive(Debug, Clone, Deserialize)]
-pub struct BookSidebar {
-    pub sections: Vec<BookSection>,
-}
-
-#[derive(Debug, Clone, Deserialize)]
-pub struct BookSection {
-    pub title: String,
-    pub items: Vec<BookDoc>,
-}
-
-#[derive(Debug, Clone, Deserialize)]
-pub struct BookDoc {
-    pub name: String,
-    pub href: String,
-}
-
-pub static BOOK_SIDEBAR: LazyLock<BookSidebar> = LazyLock::new(|| {
-    let sidebar_json =
-        fs::read_to_string("sycamore/docs/next/sidebar.json").expect("failed to read sidebar.json");
-    serde_json::from_str(&sidebar_json).expect("failed to parse sidebar.json")
-});
-
-pub fn get_static_paths() -> Vec<String> {
+pub fn get_static_paths() -> Vec<(Routes, String)> {
     let mut paths = vec![];
 
-    paths.push("/index.html".to_string());
-    paths.push("/404.html".to_string());
+    paths.push((Routes::Index, "/index.html".to_string()));
+    paths.push((Routes::NotFound, "/404.html".to_string()));
 
     for post in POSTS.keys() {
-        paths.push(format!("/post/{post}"));
+        paths.push((Routes::Post(post.clone()), format!("/post/{post}.html")));
     }
 
-    for (section, doc) in DOCS.keys() {
-        match doc {
-            Some(doc) => paths.push(format!("/book/{section}/{doc}")),
-            None => paths.push(format!("/book/{section}")),
+    for page in DOCS.keys() {
+        match page.subsection() {
+            Some(subsection) => paths.push((
+                Routes::BookSubsection(
+                    page.section().to_string(),
+                    page.subsection().unwrap().to_string(),
+                ),
+                format!("/book/{}/{subsection}.html", page.section()),
+            )),
+            None => paths.push((
+                Routes::BookSection(page.section().to_string()),
+                format!("/book/{}/index.html", page.section()),
+            )),
         }
     }
 

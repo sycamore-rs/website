@@ -12,23 +12,27 @@ pub mod utils;
 use self::shell::*;
 
 #[cfg_ssr]
+pub static DOCS_DIR: &str = match option_env!("DOCS_DIR") {
+    Some(path) => path,
+    None => "sycamore/docs/",
+};
+
+#[cfg_ssr]
 fn main() {
     use std::{fs, path::PathBuf};
-    use sycamore_router::Route;
 
     static PUBLIC_PATH: &str = "dist/.stage";
 
-    let routes = content::get_static_paths();
-    for route in routes {
-        let trimmed = route.trim_start_matches('/').trim_end_matches(".html");
-        let path = PathBuf::from(PUBLIC_PATH).join(format!("{trimmed}.html"));
+    for (route, path) in content::get_static_paths() {
+        let path = path.trim_start_matches('/');
+        let path = PathBuf::from(PUBLIC_PATH).join(path);
 
-        eprintln!("Rendering `{route}` to `{}`", path.display());
+        eprintln!("Rendering `{}`", path.display());
 
         let html = sycamore::render_to_string(|| {
             view! {
                 Shell {
-                    sycamore_router::StaticRouter(route=Routes::default().match_path(&route), view=App)
+                    sycamore_router::StaticRouter(route=route, view=App)
                 }
             }
         });

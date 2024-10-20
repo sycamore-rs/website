@@ -29,7 +29,7 @@ fn Header(show_menu: ReadSignal<bool>, menu_open: Signal<bool>) -> View {
                         }
                     }
                     div(class="flex flex-row space-x-6 text-xl") {
-                        a(href="/book/getting_started/installation") {
+                        a(href="/book/introduction") {
                             i(class="bi bi-book-half hover:text-gray-600", aria-label="Book")
                         }
                         a(href="https://github.com/sycamore-rs/sycamore") {
@@ -79,7 +79,7 @@ fn Footer() -> View {
                     p(class="font-semibold") { "Resources" }
                     ul {
                         li {
-                            a(href="/book/getting_started/installation") { "Book" }
+                            a(href="/book/introduction") { "Book" }
                         }
                         li {
                             a(href="https://docs.rs/sycamore") { "docs.rs" }
@@ -100,7 +100,7 @@ pub fn Layout(children: Children) -> View {
     
     let menu_open = create_signal(false);
     // Show the menu only on book pages.
-    let show_menu = create_selector(move || matches!(current_route.0.get_clone(), Routes::BookDoc(_, _) | Routes::BookSection(_)));
+    let show_menu = create_selector(move || matches!(current_route.0.get_clone(), Routes::BookSubsection(_, _) | Routes::BookSection(_)));
 
     view! {
         div(class="flex flex-col min-h-screen") {
