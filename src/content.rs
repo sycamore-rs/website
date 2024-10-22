@@ -252,7 +252,7 @@ pub fn get_static_paths() -> Vec<(Routes, String)> {
             )),
             None => paths.push((
                 Routes::BookSection(page.section().to_string()),
-                format!("/book/{}/index.html", page.section()),
+                format!("/book/{}.html", page.section()),
             )),
         }
     }
