@@ -30,9 +30,13 @@ pub fn PostBody(id: String) -> View {
 
     view! {
         ServerTitle(title=parsed.front_matter.title.clone())
-        div(class="mx-auto px-2 pt-5 pb-10 prose") {
-            span(class="text-sm") { (parsed.front_matter.date.to_string()) }
-            mdsycx::MDSycX(body=parsed.body)
+        div(class="flex flex-row gap-0 sm:gap-4 w-full justify-center") {
+            div(class="flex-none w-40 hidden lg:block") // Empty block used for spacing
+            div(class="grow-0 min-w-0 px-2 pt-5 pb-10 prose md:w-[80ch]") {
+                span(class="text-sm") { (parsed.front_matter.date.to_string()) }
+                mdsycx::MDSycX(body=parsed.body)
+            }
+            crate::utils::HeadingsOutline(headings=parsed.headings)
         }
     }
 }
