@@ -215,7 +215,8 @@ pub static POSTS: std::sync::LazyLock<HashMap<String, ParseRes<PostFrontmatter>>
     LazyLock::new(|| {
         let mut posts = HashMap::new();
 
-        for entry in fs::read_dir("sycamore/docs/posts").expect("failed to read posts directory") {
+        let post_dir = PathBuf::from(DOCS_DIR).join("posts");
+        for entry in fs::read_dir(post_dir).expect("failed to read posts directory") {
             let entry = entry.expect("failed to read post entry");
             let path = entry.path();
             let name = path
