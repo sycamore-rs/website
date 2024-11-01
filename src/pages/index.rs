@@ -44,7 +44,7 @@ fn IndexBody() -> View {
                     }
 
                     p(class="text-sm mt-4 text-gray-800") {
-                        "Latest Release: " a(href="https://crates.io/crates/sycamore", class="underline") { "v0.9.0-beta.4" }
+                        "Latest Release: " a(href="https://crates.io/crates/sycamore", class="underline") { "v0.9.0" }
                     }
                 }
                 // Code example
@@ -153,7 +153,10 @@ fn Counter(initial: i32) -> View {
 
 #[cfg_ssr]
 #[component(inline_props)]
-fn SectionHeading(content: &'static str, #[prop(attributes(html, h2))] attributes: Attributes) -> View {
+fn SectionHeading(
+    content: &'static str,
+    #[prop(attributes(html, h2))] attributes: Attributes,
+) -> View {
     view! {
         h2(class="text-4xl text-center font-bold mt-20 mb-5", ..attributes) {
             (content)
