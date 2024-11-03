@@ -71,7 +71,7 @@ fn Footer() -> View {
                             a(href="https://discord.gg/vDwFUmm6mU") { "Discord" }
                         }
                         li {
-                            a(href="https://github.com/sycamore-rs/sycamore-awesome") { "Awesome" }
+                            a(href="https://github.com/sycamore-rs/awesome-sycamore") { "Awesome" }
                         }
                     }
                 }
@@ -98,7 +98,12 @@ pub fn Layout(children: Children) -> View {
 
     let menu_open = create_signal(false);
     // Show the menu only on book pages.
-    let show_menu = create_selector(move || matches!(current_route.0.get_clone(), Routes::BookSubsection(_, _) | Routes::BookSection(_)));
+    let show_menu = create_selector(move || {
+        matches!(
+            current_route.0.get_clone(),
+            Routes::BookSubsection(_, _) | Routes::BookSection(_)
+        )
+    });
 
     view! {
         div(class="flex flex-col min-h-screen") {
