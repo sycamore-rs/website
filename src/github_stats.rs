@@ -2,6 +2,10 @@
 
 use std::sync::LazyLock;
 
+use reqwest::{
+    blocking::Client,
+    header::{HeaderMap, ACCEPT},
+};
 use serde::{Deserialize, Serialize};
 
 static OWNER: &str = "sycamore-rs";
@@ -9,9 +13,12 @@ static REPO: &str = "sycamore";
 
 static USER_AGENT: &str = concat!(env!("CARGO_PKG_NAME"), "/", env!("CARGO_PKG_VERSION"));
 
-static CLIENT: LazyLock<reqwest::blocking::Client> = LazyLock::new(|| {
-    reqwest::blocking::Client::builder()
+static CLIENT: LazyLock<Client> = LazyLock::new(|| {
+    let mut headers = HeaderMap::new();
+    headers.insert(ACCEPT, "application/vnd.github+json".parse().unwrap());
+    Client::builder()
         .user_agent(USER_AGENT)
+        .default_headers(headers)
         .build()
         .expect("could not create reqwest client")
 });
@@ -31,10 +38,10 @@ pub struct Cache {
 static CACHED_VALUES: LazyLock<Cache> = LazyLock::new(|| {
     // If file does not exist, create it first.
     if !std::path::Path::new(CACHE).exists() {
-        let file = std::fs::File::create(CACHE).expect("could not create cache file");
-
         let latest_release = format!("https://api.github.com/repos/{OWNER}/{REPO}/releases/latest");
-        let contributors = format!("https://api.github.com/repos/{OWNER}/{REPO}/contributors");
+        // TODO: This will no longer work if we get over 100 contributors.
+        let contributors =
+            format!("https://api.github.com/repos/{OWNER}/{REPO}/contributors?per_page=100");
         let repo_stats = format!("https://api.github.com/repos/{OWNER}/{REPO}");
 
         let values = std::thread::spawn(move || {
@@ -47,6 +54,8 @@ static CACHED_VALUES: LazyLock<Cache> = LazyLock::new(|| {
         .join()
         .unwrap()
         .expect("could not get values from GitHub API");
+
+        let file = std::fs::File::create(CACHE).expect("could not create cache file");
         serde_json::to_writer(file, &values).expect("could not write to cache file");
     }
     let file = std::fs::File::open(CACHE).expect("could not open cache file");
