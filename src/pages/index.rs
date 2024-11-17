@@ -21,6 +21,7 @@ fn IndexBody() -> View {
 #[cfg_ssr]
 #[component]
 fn IndexBody() -> View {
+    let latest_release = crate::github_stats::get_latest_release();
     view! {
         div(class="flex flex-col container px-2 mx-auto pb-10") {
             div(class="mt-10 md:mt-20 flex flex-col md:flex-row gap-10 items-center justify-between") {
@@ -44,7 +45,7 @@ fn IndexBody() -> View {
                     }
 
                     p(class="text-sm mt-4 text-gray-800") {
-                        "Latest Release: " a(href="https://crates.io/crates/sycamore", class="underline") { "v0.9.0" }
+                        "Latest Release: " a(href=latest_release.html_url, class="underline") { (latest_release.name) }
                     }
                 }
                 // Code example
@@ -124,26 +125,7 @@ fn Counter(initial: i32) -> View {
             }
 
             SectionHeading(content="Community")
-            div(class="grid grid-rows-3 sm:grid-rows-1 sm:grid-cols-3 text-2xl font-bold text-center border-gray-200 divide-y-2 sm:divide-y-0 sm:divide-x-2 divide-solid rounded-lg max-w-[1000px] mx-auto") {
-                div(class="px-4") {
-                    "2.8k Stars"
-                    p(class="text-sm font-normal") { "on GitHub" }
-                }
-                div(class="px-4") {
-                    "63 Contributors"
-                    p(class="text-sm font-normal") { "on GitHub" }
-                }
-                div(class="px-4") {
-                    "150k+ Downloads"
-                    p(class="text-sm font-normal") { "on crates.io" }
-                }
-            }
-            div(class="mt-5 text-center") {
-                p { "Sycamore is made possible by all our " a(class="underline", href="https://github.com/sycamore-rs/sycamore/graphs/contributors") { "community contributors" } ". Thank you!" }
-                img(src="https://contrib.rocks/image?repo=sycamore-rs/sycamore", alt="Contributors", class="mx-auto my-2 sm:max-w-[600px]")
-                p { "Interested in contributing as well? Check out our " a(class="underline", href="https://github.com/sycamore-rs/sycamore/blob/main/CONTRIBUTING.md") { "contribution guide" } "." }
-            }
-
+            CommunitySection {}
 
             SectionHeading(content="News", id="news")
             NewsList {}
@@ -184,6 +166,38 @@ fn FeatureCard(icon: &'static str, title: &'static str, children: Children) -> V
                 (title)
             }
             (children)
+        }
+    }
+}
+
+#[cfg_ssr]
+#[component]
+fn CommunitySection() -> View {
+    let repo_stats = crate::github_stats::get_repo_stats();
+    let stars_hundreds = (repo_stats.stargazers_count as f64 / 100.0).round() as u32;
+    let stars_text = format!("{}.{}k", stars_hundreds / 10, stars_hundreds % 10);
+
+    let contributors = crate::github_stats::get_contributors();
+
+    view! {
+        div(class="grid grid-rows-3 sm:grid-rows-1 sm:grid-cols-3 text-2xl font-bold text-center border-gray-200 divide-y-2 sm:divide-y-0 sm:divide-x-2 divide-solid rounded-lg max-w-[1000px] mx-auto") {
+            div(class="px-4") {
+                (format!("{stars_text} Stars"))
+                p(class="text-sm font-normal") { "on GitHub" }
+            }
+            div(class="px-4") {
+                (format!("{} Contributors", contributors.len()))
+                p(class="text-sm font-normal") { "on GitHub" }
+            }
+            div(class="px-4") {
+                "150k+ Downloads"
+                p(class="text-sm font-normal") { "on crates.io" }
+            }
+        }
+        div(class="mt-5 text-center") {
+            p { "Sycamore is made possible by all our " a(class="underline", href="https://github.com/sycamore-rs/sycamore/graphs/contributors") { "community contributors" } ". Thank you!" }
+            img(src="https://contrib.rocks/image?repo=sycamore-rs/sycamore", alt="Contributors", class="mx-auto my-2 sm:max-w-[600px]")
+            p { "Interested in contributing as well? Check out our " a(class="underline", href="https://github.com/sycamore-rs/sycamore/blob/main/CONTRIBUTING.md") { "contribution guide" } "." }
         }
     }
 }

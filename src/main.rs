@@ -3,6 +3,9 @@ use sycamore::{prelude::*, web::cfg_ssr_item};
 cfg_ssr_item!(
     pub mod content;
 );
+cfg_ssr_item! {
+    pub mod github_stats;
+}
 pub mod layout;
 pub mod pages;
 pub mod server_component;
@@ -36,7 +39,8 @@ async fn main() {
                     sycamore_router::StaticRouter(route=route, view=App)
                 }
             }
-        }).await;
+        })
+        .await;
 
         let dir = path.parent().expect("failed to get parent dir");
         fs::create_dir_all(dir).expect("failed to create parent dir");
