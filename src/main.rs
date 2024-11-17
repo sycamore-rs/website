@@ -59,6 +59,11 @@ async fn main() {
         fs::create_dir_all(dir).expect("failed to create parent dir");
         fs::write(path, html).expect("failed to write html file");
     }
+
+    eprintln!("Generating sitemap.xml");
+    let sitemap = content::generate_sitemap_xml().expect("failed to generate sitemap");
+    fs::write(PathBuf::from(PUBLIC_PATH).join("sitemap.xml"), sitemap)
+        .expect("failed to write sitemap.xml");
 }
 
 #[cfg_not_ssr]

@@ -1,7 +1,14 @@
 use mdsycx::ParseRes;
 use serde::Deserialize;
 
-use std::{collections::HashMap, fmt::Display, fs, path::PathBuf, str::FromStr, sync::LazyLock};
+use std::{
+    collections::HashMap,
+    fmt::{Display, Write},
+    fs,
+    path::PathBuf,
+    str::FromStr,
+    sync::LazyLock,
+};
 
 use crate::{Routes, DOCS_DIR};
 
@@ -259,4 +266,34 @@ pub fn get_static_paths() -> Vec<(Routes, String)> {
     }
 
     paths
+}
+
+/// Generate an XML sitemap file.
+pub fn generate_sitemap_xml() -> Result<String, std::fmt::Error> {
+    static BASE_URL: &str = "https://sycamore-rs.netlify.app";
+
+    let paths = get_static_paths();
+    let mut buf = String::new();
+
+    write!(
+        &mut buf,
+        r#"<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">"#
+    )?;
+
+    for (route, path) in paths {
+        if route == Routes::NotFound {
+            continue;
+        }
+        let path = path
+            .strip_suffix(".html")
+            .expect("should be an html page")
+            .trim_end_matches("index");
+        let loc = format!("{BASE_URL}{path}");
+
+        write!(&mut buf, r#"<url><loc>{loc}</loc></url>"#)?;
+    }
+
+    write!(&mut buf, r#"</urlset>"#)?;
+
+    Ok(buf)
 }

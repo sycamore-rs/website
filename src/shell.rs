@@ -3,7 +3,7 @@ use sycamore_router::Route;
 
 use crate::{layout, pages};
 
-#[derive(Debug, Clone, Route)]
+#[derive(Debug, Clone, PartialEq, Route)]
 pub enum Routes {
     #[to("/")]
     Index,
@@ -44,11 +44,13 @@ pub fn Shell(children: Children) -> View {
     let title_static = title.0.get_clone();
 
     view! {
-        html {
+        html(lang="en") {
             sycamore::web::NoHydrate {
                 head {
                     meta(charset="utf-8")
                     meta(name="viewport", content="width=device-width, initial-scale=1")
+
+                    meta(name="description", content="Sycamore is a next generation Rust UI library powered by fine-grained reactivity. Create reactive apps with effortless performance")
 
                     title { (title_static) }
 
