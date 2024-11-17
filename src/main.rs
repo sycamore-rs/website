@@ -4,7 +4,7 @@ cfg_ssr_item!(
     pub mod content;
 );
 cfg_ssr_item! {
-    pub mod github_stats;
+    pub mod api_stats;
 }
 pub mod layout;
 pub mod pages;
