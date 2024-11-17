@@ -178,6 +178,7 @@ fn CommunitySection() -> View {
     let stars_text = format!("{}.{}k", stars_hundreds / 10, stars_hundreds % 10);
 
     let contributors = crate::api_stats::get_contributors();
+    let contributors_len = contributors.len();
 
     let crates_io_downloads = crate::api_stats::get_crate_io_stats()._crate.downloads;
 
@@ -188,7 +189,7 @@ fn CommunitySection() -> View {
                 p(class="text-sm font-normal") { "on GitHub" }
             }
             div(class="px-4") {
-                (format!("{} Contributors", contributors.len()))
+                (format!("{} Contributors", contributors_len))
                 p(class="text-sm font-normal") { "on GitHub" }
             }
             div(class="px-4") {
@@ -198,7 +199,18 @@ fn CommunitySection() -> View {
         }
         div(class="mt-5 text-center") {
             p { "Sycamore is made possible by all our " a(class="underline", href="https://github.com/sycamore-rs/sycamore/graphs/contributors") { "community contributors" } ". Thank you!" }
-            img(src="https://contrib.rocks/image?repo=sycamore-rs/sycamore", alt="Contributors", class="mx-auto my-2 sm:max-w-[600px]")
+
+            div(class="mx-auto my-2 sm:max-w-[800px] flex flex-wrap justify-center gap-2") {
+                Indexed(
+                    list=contributors,
+                    view=|contributor| view! {
+                        a(href=contributor.html_url) {
+                            img(src=contributor.avatar_url, title=contributor.login, class="rounded-full w-12 h-12 hover:shadow-lg transition", loading="lazy")
+                        }
+                    }
+                )
+            }
+
             p { "Interested in contributing as well? Check out our " a(class="underline", href="https://github.com/sycamore-rs/sycamore/blob/main/CONTRIBUTING.md") { "contribution guide" } "." }
         }
     }

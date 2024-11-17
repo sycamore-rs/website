@@ -78,7 +78,7 @@ pub fn get_repo_stats() -> RepoStats {
     CACHED_VALUES.repo_stats.clone()
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct Contributor {
     pub login: String,
     pub avatar_url: String,
