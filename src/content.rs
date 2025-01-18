@@ -270,7 +270,7 @@ pub fn get_static_paths() -> Vec<(Routes, String)> {
 
 /// Generate an XML sitemap file.
 pub fn generate_sitemap_xml() -> Result<String, std::fmt::Error> {
-    static BASE_URL: &str = "https://sycamore-rs.netlify.app";
+    static BASE_URL: &str = "https://sycamore.dev";
 
     let paths = get_static_paths();
     let mut buf = String::new();
