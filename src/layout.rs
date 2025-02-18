@@ -6,7 +6,7 @@ use crate::{CurrentRoute, Routes};
 fn Header(show_menu: ReadSignal<bool>, menu_open: Signal<bool>) -> View {
     let toggle_menu = move |_| menu_open.set(!menu_open.get());
     view! {
-        header(class="fixed top-0 z-50 w-full border-b-2 border-gray-200 bg-gray-100") {
+        header(class="fixed top-0 z-50 w-full border-b-2 border-gray-200 bg-gray-100 dark:bg-gray-900 dark:border-gray-800") {
             nav(class="px-4") {
                 div(class="flex flex-row justify-between items-center h-12") {
                     div(class="flex flex-row gap-4") {
@@ -28,16 +28,17 @@ fn Header(show_menu: ReadSignal<bool>, menu_open: Signal<bool>) -> View {
                             "Sycamore"
                         }
                     }
-                    div(class="flex flex-row space-x-6 text-xl") {
+                    div(class="flex flex-row space-x-6 text-xl *:hover:text-gray-600 dark:*:hover:text-gray-300") {
                         a(href="/book/introduction") {
-                            i(class="bi bi-book-half hover:text-gray-600", aria-label="Book")
+                            i(class="bi bi-book-half", aria-label="Book")
                         }
                         a(href="https://github.com/sycamore-rs/sycamore") {
-                            i(class="bi bi-github hover:text-gray-600", aria-label="GitHub")
+                            i(class="bi bi-github", aria-label="GitHub")
                         }
                         a(href="https://discord.gg/vDwFUmm6mU") {
-                            i(class="bi bi-discord hover:text-gray-600", aria-label="Discord")
+                            i(class="bi bi-discord", aria-label="Discord")
                         }
+                        DarkModeToggle {}
                     }
                 }
             }
@@ -45,10 +46,33 @@ fn Header(show_menu: ReadSignal<bool>, menu_open: Signal<bool>) -> View {
     }
 }
 
+#[derive(Clone, Copy)]
+pub struct DarkMode(pub Signal<bool>);
+
+#[component]
+fn DarkModeToggle() -> View {
+    let DarkMode(dark_mode) = use_context::<DarkMode>();
+    let toggle = move |_| dark_mode.set(!dark_mode.get());
+
+    view! {
+        button(title="Toggle dark mode", class="w-3 cursor-pointer", on:click=toggle) {
+            (if dark_mode.get() {
+                view! {
+                    i(class="bi bi-sun")
+                }
+            } else {
+                view! {
+                    i(class="bi bi-moon")
+                }
+            })
+        }
+    }
+}
+
 #[component]
 fn Footer() -> View {
     view! {
-        footer(class="text-sm px-4 pt-4 pb-2 border-t-2 border-gray-200 bg-gray-100") {
+        footer(class="text-sm px-4 pt-4 pb-2 border-t-2 border-gray-200 bg-gray-100 dark:bg-gray-900 dark:border-gray-800") {
             div(class="flex flex-col sm:flex-row gap-10 md:gap-20 lg:gap-40") {
                 div {
                     div(class="flex flex-row items-center gap-4") {
@@ -106,9 +130,9 @@ pub fn Layout(children: Children) -> View {
     });
 
     view! {
-        div(class="flex flex-col min-h-screen") {
+        div(class="flex flex-col min-h-screen dark:text-gray-100") {
             Header(menu_open=menu_open, show_menu=show_menu)
-            main(class="mt-12 flex-grow bg-gray-50") {
+            main(class="mt-12 flex-grow bg-gray-50 dark:bg-gray-950") {
                 div(class=if menu_open.get() { "transition-transform translate-x-44" } else { "transition-transform" }) {
                     (children)
                 }

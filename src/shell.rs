@@ -1,7 +1,10 @@
 use sycamore::prelude::*;
 use sycamore_router::Route;
 
-use crate::{layout, pages};
+use crate::{
+    layout::{self, DarkMode},
+    pages,
+};
 
 #[derive(Debug, Clone, PartialEq, Route)]
 pub enum Routes {
@@ -32,6 +35,39 @@ pub fn Shell(children: Children) -> View {
     let title = Title(create_signal(String::new()));
     provide_context(title);
 
+    let dark_mode = if is_ssr!() {
+        false
+    } else {
+        let local_storage = window().local_storage().unwrap();
+        // Get dark mode from media query.
+        let dark_mode_mq = window()
+            .match_media("(prefers-color-scheme: dark)")
+            .unwrap()
+            .unwrap()
+            .matches();
+        if let Some(local_storage) = &local_storage {
+            let dark_mode_ls = local_storage.get_item("dark_mode").unwrap();
+            dark_mode_ls.as_deref() == Some("true") || (dark_mode_ls.is_none() && dark_mode_mq)
+        } else {
+            dark_mode_mq
+        }
+    };
+    let dark_mode = DarkMode(create_signal(dark_mode));
+    if is_not_ssr!() {
+        let local_storage = window().local_storage().unwrap();
+        create_effect(move || {
+            if let Some(local_storage) = &local_storage {
+                local_storage
+                    .set_item("dark_mode", &dark_mode.0.get().to_string())
+                    .unwrap();
+            }
+        });
+        // Force a re-render so that UI state is consistent.
+        on_mount(move || dark_mode.0.set(dark_mode.0.get()));
+    }
+
+    provide_context(dark_mode);
+
     if is_not_ssr!() {
         create_effect(move || {
             let title = title.0.get_clone();
@@ -44,7 +80,7 @@ pub fn Shell(children: Children) -> View {
     let title_static = title.0.get_clone();
 
     view! {
-        html(lang="en") {
+        html(lang="en", "data-color-scheme"=if dark_mode.0.get() { "dark" } else { "light" }) {
             sycamore::web::NoHydrate {
                 head {
                     meta(charset="utf-8")
@@ -83,6 +119,13 @@ pub fn Shell(children: Children) -> View {
                     } else {
                         view! {}
                     })
+
+                    // Synchronously check if we are in dark mode or not.
+                    // If so, set the `data-color-scheme` attribute to "dark" and add the dark class to the body.
+                    script(dangerously_set_inner_html=
+                        r#"const darkModeLs = localStorage.getItem("dark_mode");
+                        const darkMode = darkModeLs === "true" || (darkModeLs === null && window.matchMedia("(prefers-color-scheme: dark)").matches);
+                        document.documentElement.setAttribute("data-color-scheme", darkMode ? "dark" : "light");"#)
                 }
             }
             body {

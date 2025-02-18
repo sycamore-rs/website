@@ -26,17 +26,17 @@ fn IndexBody() -> View {
         div(class="flex flex-col container px-2 mx-auto pb-10") {
             div(class="mt-10 md:mt-20 flex flex-col md:flex-row gap-10 items-center justify-between") {
                 div(class="max-w-[530px]") {
-                    h1(class="text-4xl sm:text-5xl pb-5 font-bold bg-gradient-to-br from-orange-800 from-20% to-orange-800 to-80% via-orange-950 text-transparent bg-clip-text") {
+                    h1(class="text-4xl sm:text-5xl pb-5 font-bold bg-gradient-to-br from-orange-800 from-20% to-orange-800 to-80% via-orange-950 dark:from-orange-200 dark:to-orange-500 dark:via-orange-400 text-transparent bg-clip-text") {
                         "Reactive Apps with"
                         br {}
                         "Effortless Performance."
                     }
                     p(class="text-2xl") {
-                        span(class="font-bold text-orange-900") { "Sycamore" } " is a next generation Rust UI library powered by fine-grained reactivity."
+                        span(class="font-bold text-orange-900 dark:text-orange-400") { "Sycamore" } " is a next generation Rust UI library powered by fine-grained reactivity."
                     }
 
                     div(class="flex flex-row flex-wrap gap-4 font-semibold mt-10") {
-                        a(class="block px-5 py-1.5 min-w-40 text-center bg-orange-400 rounded-full hover:bg-orange-500 transition-colors", href="/book/introduction", data-umami-event="Read book") {
+                        a(class="block px-5 py-1.5 min-w-40 text-center bg-orange-400 dark:bg-orange-500 rounded-full hover:bg-orange-500 dark:hover:bg-orange-400 transition-colors", href="/book/introduction", data-umami-event="Read book") {
                             "Read the Book"
                         }
                         a(class="block px-5 py-1.5 min-w-40 text-center text-white bg-gray-800 rounded-full hover:bg-gray-900 transition-colors", href="https://discord.gg/vDwFUmm6mU", data-umami-event="Join discord") {
@@ -44,7 +44,7 @@ fn IndexBody() -> View {
                         }
                     }
 
-                    p(class="text-sm mt-4 text-gray-800") {
+                    p(class="text-sm mt-4 text-gray-800 dark:text-gray-400") {
                         "Latest Release: " a(href=latest_release.html_url, class="underline") { (latest_release.name) }
                     }
                 }
@@ -160,7 +160,7 @@ fn FeatureIcon(icon: &'static str) -> View {
 #[component(inline_props)]
 fn FeatureCard(icon: &'static str, title: &'static str, children: Children) -> View {
     view! {
-        div(class="hover:shadow-lg hover:bg-white rounded-lg py-4 px-5 transition mx-auto max-w-[500px]") {
+        div(class="hover:shadow-lg hover:bg-white dark:hover:bg-gray-900 rounded-lg py-4 px-5 transition mx-auto max-w-[500px]") {
             FeatureIcon(icon=icon)
             h3(class="text-xl font-semibold text-center") {
                 (title)
@@ -238,7 +238,7 @@ fn NewsList() -> View {
                     p(class="text-2xl font-semibold") {
                         (post.front_matter.title.clone())
                     }
-                    p(class="text-gray-800") {
+                    p(class="text-gray-800 dark:text-gray-400") {
                         (post.front_matter.description.clone())
                     }
                 }

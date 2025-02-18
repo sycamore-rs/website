@@ -2,6 +2,8 @@
 @plugin "@tailwindcss/typography";
 @config "../tailwind.config.js";
 
+@custom-variant dark (&:where([data-color-scheme='dark'], [data-color-scheme='dark'] *));
+
 @theme {
   --font-sans: Inter, system-ui, sans-serif;
   --font-mono: Consolas, Monaco, "Andale Mono", monospace;
@@ -17,11 +19,19 @@
     @apply scroll-smooth;
   }
 
+  html {
+    @apply bg-gray-50;
+  }
+
+  html[data-color-scheme='dark'] {
+    @apply bg-gray-950;
+  }
+
   * {
     @apply scroll-mt-12;
   }
 
   blockquote {
-    @apply py-0.25 bg-amber-200 border-l-4 border-amber-500 rounded;
+    @apply py-0.25 bg-amber-200 border-l-4 border-amber-500 dark:bg-sky-900 dark:border-sky-700 rounded;
   }
 }

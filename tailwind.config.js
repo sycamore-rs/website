@@ -1,6 +1,5 @@
 module.exports = {
 	content: ["./src/**/*.rs"],
-	darkMode: "class", // or 'media' or 'class'
 	theme: {
 		extend: {
 			zIndex: {

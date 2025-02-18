@@ -48,7 +48,7 @@ fn BookBody(section: String, #[prop(!optional)] doc: Option<String>) -> View {
             div(class="flex-none w-44 pt-8 pb-5 px-2 space-y-2 text-sm sticky top-12 max-h-[calc(100vh-3rem)] overflow-y-auto block -ml-44 sm:ml-0") {
                 BookIndex(section=section, doc=doc)
             }
-            div(class="grow-0 min-w-0 px-2 pt-5 pb-10 prose md:w-[80ch]") {
+            div(class="grow-0 min-w-0 px-2 pt-5 pb-10 prose md:w-[80ch] dark:prose-invert") {
                 mdsycx::MDSycX(body=parsed.body)
 
                 div(class="mt-6 mr-2 text-right") {
@@ -66,13 +66,13 @@ fn BookBody(section: String, #[prop(!optional)] doc: Option<String>) -> View {
                             "v0.9" span(class="font-normal") { " (current)" }
                         }
                         li {
-                            a(class="hover:text-orange-700", href="https://sycamore-rs.netlify.app/docs/v0.8/getting_started/installation") {
+                            a(class="hover:text-orange-700 dark:hover:text-orange-500", href="https://sycamore-rs.netlify.app/docs/v0.8/getting_started/installation") {
                                 "v0.8"
                                 i(class="bi bi-box-arrow-up-right ml-2")
                             }
                         }
                         li {
-                            a(class="hover:text-orange-700", href="https://sycamore-rs.netlify.app/docs/v0.7/getting_started/installation") {
+                            a(class="hover:text-orange-700 dark:hover:text-orange-500", href="https://sycamore-rs.netlify.app/docs/v0.7/getting_started/installation") {
                                 "v0.7"
                                 i(class="bi bi-box-arrow-up-right ml-2")
                             }
@@ -109,9 +109,9 @@ fn BookIndex(section: String, #[prop(!optional)] doc: Option<String>) -> View {
                         item.path.subsection().unwrap()
                     );
                     let class = if href == current_href {
-                        "text-orange-700"
+                        "text-orange-700 dark:text-orange-500"
                     } else {
-                        "hover:text-orange-700 transition-colors"
+                        "hover:text-orange-700 dark:hover:text-orange-500 transition-colors"
                     };
                     view! {
                         li(class="mt-0.5") {
@@ -122,9 +122,9 @@ fn BookIndex(section: String, #[prop(!optional)] doc: Option<String>) -> View {
                 .collect::<Vec<_>>();
             let href = format!("/book/{}", section.path.section());
             let class = if href == current_href {
-                "font-semibold text-orange-700"
+                "font-semibold text-orange-700 dark:text-orange-500"
             } else {
-                "font-semibold hover:text-orange-700 transition-colors"
+                "font-semibold hover:text-orange-700 dark:hover:text-orange-500 transition-colors"
             };
             view! {
                 div {

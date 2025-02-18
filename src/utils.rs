@@ -20,7 +20,7 @@ pub fn HeadingsOutline(headings: Vec<mdsycx::OutlineHeading>, children: Children
         .into_iter()
         .map(|heading| {
             let href = format!("#{}", heading.id);
-            let class = "hover:text-orange-700 transition-colors";
+            let class = "hover:text-orange-700 dark:hover:text-orange-500 transition-colors";
             match heading.level {
                 1 => view! {},
                 2 => view! {
