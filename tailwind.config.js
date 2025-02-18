@@ -18,6 +18,12 @@ module.exports = {
 							margin: "0.5em 0",
 							lineHeight: "1.5 !important",
 						},
+						blockquote: {
+							quotes: "none",
+							fontStyle: "normal",
+							borderInlineStartWidth: null,
+							borderInlineStartColor: null,
+						}
 					},
 				},
 			}),
