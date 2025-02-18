@@ -1,5 +1,14 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
+@config "../tailwind.config.js";
+
+@theme {
+  --font-sans: Inter, system-ui, sans-serif;
+  --font-mono: Consolas, Monaco, "Andale Mono", monospace;
+
+  --color-codeblock: #1d2021;
+  --color-codeblock-code: #ebdbb2;
+}
 
 @layer base {
 
