@@ -76,7 +76,7 @@ pub fn Shell(children: Children) -> View {
 
                     sycamore::web::HydrationScript {}
 
-                    (if cfg!(debug_assertions) {
+                    (if option_env!("TRUNK_AUTO_RELOAD").is_some() {
                         view! {
                             script(dangerously_set_inner_html=AUTORELOAD)
                         }
