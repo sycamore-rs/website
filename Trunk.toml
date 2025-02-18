@@ -8,6 +8,7 @@ watch = ["./", "../sycamore/docs"]
 
 [serve]
 no_spa = true
+port = 8000   # We are using another server for serving the static files since we are using a MPA architecture.
 
 [[hooks]]
 stage = "build"
