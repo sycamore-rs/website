@@ -183,7 +183,7 @@ fn CommunitySection() -> View {
     let crates_io_downloads = crate::api_stats::get_crate_io_stats()._crate.downloads;
 
     view! {
-        div(class="grid grid-rows-3 sm:grid-rows-1 sm:grid-cols-3 text-2xl font-bold text-center border-gray-200 divide-y-2 sm:divide-y-0 sm:divide-x-2 divide-solid rounded-lg max-w-[1000px] mx-auto") {
+        div(class="grid grid-rows-3 sm:grid-rows-1 sm:grid-cols-3 text-2xl font-bold text-center divide-gray-200 divide-y-2 sm:divide-y-0 sm:divide-x-2 divide-solid rounded-lg max-w-[1000px] mx-auto") {
             div(class="px-4") {
                 (format!("{stars_text} Stars"))
                 p(class="text-sm font-normal") { "on GitHub" }
