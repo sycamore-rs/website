@@ -122,7 +122,7 @@ pub fn Layout(children: Children) -> View {
 
     let menu_open = create_signal(false);
     // Show the menu only on book pages.
-    let show_menu = create_selector(move || {
+    let is_book_page = create_selector(move || {
         matches!(
             current_route.0.get_clone(),
             Routes::BookSubsection(_, _) | Routes::BookSection(_)
@@ -131,13 +131,18 @@ pub fn Layout(children: Children) -> View {
 
     view! {
         div(class="flex flex-col min-h-screen dark:text-gray-100") {
-            Header(menu_open=menu_open, show_menu=show_menu)
+            Header(menu_open=menu_open, show_menu=is_book_page)
             main(class="mt-12 flex-grow bg-gray-50 dark:bg-gray-950") {
                 div(class=if menu_open.get() { "transition-transform translate-x-44" } else { "transition-transform" }) {
                     (children)
                 }
             }
-            Footer {}
+            // Don't show the footer on book pages since they have a different layout.
+            (if !is_book_page.get() {
+                view! { Footer {} }
+            } else {
+                view! {}
+            })
         }
     }
 }
