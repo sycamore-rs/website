@@ -72,7 +72,7 @@ fn DarkModeToggle() -> View {
 #[component]
 fn Footer() -> View {
     view! {
-        footer(class="text-sm px-4 pt-4 pb-2 border-t-2 border-gray-200 bg-gray-100 dark:bg-gray-900 dark:border-gray-800") {
+        footer(class="text-sm px-4 md:px-22 pt-6 pb-10 border-t-2 border-gray-200 bg-gray-100 dark:bg-gray-900 dark:border-gray-800") {
             div(class="flex flex-col sm:flex-row gap-10 md:gap-20 lg:gap-40") {
                 div {
                     div(class="flex flex-row items-center gap-4") {
