@@ -86,7 +86,7 @@ fn Footer() -> View {
                     }
                 }
                 div {
-                    p(class="font-semibold mb-2") { "Community" }
+                    p(class="font-semibold my-2") { "Community" }
                     ul {
                         li {
                             a(href="https://github.com/sycamore-rs/sycamore") { "GitHub" }
@@ -100,7 +100,7 @@ fn Footer() -> View {
                     }
                 }
                 div {
-                    p(class="font-semibold mb-2") { "Resources" }
+                    p(class="font-semibold my-2") { "Resources" }
                     ul {
                         li {
                             a(href="/book/introduction") { "Book" }
