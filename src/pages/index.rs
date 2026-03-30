@@ -23,7 +23,7 @@ fn IndexBody() -> View {
 fn IndexBody() -> View {
     let latest_release = crate::api_stats::get_latest_release();
     view! {
-        div(class="flex flex-col container px-2 mx-auto pb-10") {
+        div(class="flex flex-col container px-2 md:px-20 mx-auto pb-10") {
             div(class="mt-10 md:mt-20 flex flex-col md:flex-row gap-10 items-center justify-between") {
                 div(class="max-w-[530px]") {
                     h1(class="text-4xl sm:text-5xl pb-5 font-bold bg-gradient-to-br from-orange-800 from-20% to-orange-800 to-80% via-orange-950 dark:from-orange-200 dark:to-orange-500 dark:via-orange-400 text-transparent bg-clip-text") {

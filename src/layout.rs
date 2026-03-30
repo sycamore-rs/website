@@ -86,7 +86,7 @@ fn Footer() -> View {
                     }
                 }
                 div {
-                    p(class="font-semibold") { "Community" }
+                    p(class="font-semibold mb-2") { "Community" }
                     ul {
                         li {
                             a(href="https://github.com/sycamore-rs/sycamore") { "GitHub" }
@@ -100,7 +100,7 @@ fn Footer() -> View {
                     }
                 }
                 div {
-                    p(class="font-semibold") { "Resources" }
+                    p(class="font-semibold mb-2") { "Resources" }
                     ul {
                         li {
                             a(href="/book/introduction") { "Book" }
@@ -111,7 +111,7 @@ fn Footer() -> View {
                     }
                 }
             }
-            p(class="mt-6 text-gray-700 text-xs") { "© 2024 Sycamore" }
+            p(class="mt-6 text-gray-700 dark:text-gray-300 text-xs") { "© 2026 Sycamore" }
         }
     }
 }
