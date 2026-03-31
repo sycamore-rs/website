@@ -77,6 +77,8 @@ pub fn Shell(children: Children) -> View {
         });
     }
 
+    // Call the children now so that we can get the title before we render the head.
+    let children = children.call();
     let title_static = title.0.get_clone();
 
     view! {
