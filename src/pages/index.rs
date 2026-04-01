@@ -32,7 +32,7 @@ fn IndexBody() -> View {
                         "Effortless Performance."
                     }
                     p(class="text-2xl") {
-                        span(class="font-bold text-orange-900 dark:text-orange-400") { "Sycamore" } " is a next generation Rust UI library powered by fine-grained reactivity."
+                        span(class="font-bold text-orange-900 dark:text-orange-400") { "Sycamore" } " is a next gen Rust web UI library powered by fine-grained reactivity."
                     }
 
                     div(class="flex flex-row flex-wrap gap-4 font-semibold mt-10") {
