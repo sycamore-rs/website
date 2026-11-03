@@ -108,6 +108,9 @@ fn Footer() -> View {
                         li {
                             a(href="https://docs.rs/sycamore") { "docs.rs" }
                         }
+                        li {
+                            a(href="https://play.sycamore.dev") { "Playground" }
+                        }
                     }
                 }
             }
