@@ -19,7 +19,7 @@ jobs:
 
       - name: update submodule git references
         run: |
-          git pull --recurse-submodules
+          # Tracking branches are configured in .gitmodules.
           git submodule update --remote --recursive
 
       - name: commit update
@@ -27,4 +27,10 @@ jobs:
           git config --global user.name 'github-actions[bot]'
           git config --global user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git remote set-url origin https://x-access-token:${{ secrets.CI_TOKEN }}@github.com/${{ github.repository }}
-          git commit -am "Auto updated submodule references" && git push || echo "No changes to commit"
+          git add -- checkouts/
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Auto updated submodule references"
+            git push
+          fi

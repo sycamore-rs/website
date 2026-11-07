@@ -1,3 +1,8 @@
-[submodule "sycamore"]
-	path = sycamore
+[submodule "checkouts/main"]
+	path = checkouts/main
 	url = https://github.com/sycamore-rs/sycamore
+	branch = main
+[submodule "checkouts/v0.9"]
+	path = checkouts/v0.9
+	url = https://github.com/sycamore-rs/sycamore
+	branch = v0.9

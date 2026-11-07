@@ -17,7 +17,7 @@ use self::shell::*;
 #[cfg_ssr]
 pub static DOCS_DIR: &str = match option_env!("DOCS_DIR") {
     Some(path) => path,
-    None => "sycamore/docs/",
+    None => "checkouts/main/docs/",
 };
 
 #[cfg_ssr]
