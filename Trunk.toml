@@ -3,8 +3,8 @@ filehash = false
 
 [watch]
 ignore = ["target_ssr"]
-# Local version of Sycamore
-watch = ["./", "../sycamore/docs"]
+# Includes all documentation checkouts.
+watch = ["./"]
 
 [serve]
 no_spa = true

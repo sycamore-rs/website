@@ -21,7 +21,22 @@ To update the checkouts locally:
 git submodule update --remote --recursive
 ```
 
-The site currently loads docs and blog posts from `checkouts/main/docs`.
+The site loads documentation from `docs/next/` in each configured checkout.
+`checkouts/main` supplies the unprefixed latest development docs and blog posts;
+other checkouts supply release docs under `/book/<checkout-name>/...`.
+
+To add a hosted release, add a submodule under `checkouts/` with a URL-safe name
+and configure its tracking branch in `.gitmodules`. The build reads this
+configuration to generate the version list, routes, and navigation. Each checkout
+must contain `docs/next/sections.json` and its referenced Markdown files.
+
+Release documentation is marked `noindex` and excluded from the sitemap. Only
+latest documentation has canonical URLs and is included in the sitemap; release
+pages remain crawlable so search engines can discover the `noindex` directive.
+The older external documentation sites remain linked in the version navigation.
+
+`DOCS_DIR` can override the latest checkout's `docs/` directory at compile time;
+release checkouts continue to use their configured paths.
 
 Build the site using `trunk build`. This will generate a `dist/` folder which can then be served with a simple web server.
 

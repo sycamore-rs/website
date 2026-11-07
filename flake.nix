@@ -25,7 +25,7 @@
             pkgs.openssl
           ];
 
-          DOCS_DIR = "../sycamore/docs";
+          DOCS_DIR = "checkouts/main/docs";
         };
       }
     );

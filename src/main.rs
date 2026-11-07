@@ -6,6 +6,7 @@ cfg_ssr_item!(
 cfg_ssr_item! {
     pub mod api_stats;
 }
+pub mod docs;
 pub mod layout;
 pub mod pages;
 pub mod server_component;
@@ -35,7 +36,7 @@ async fn main() {
 
         let html = sycamore::render_to_string_await_suspense(|| {
             view! {
-                Shell {
+                Shell(initial_route=route.clone()) {
                     sycamore_router::StaticRouter(route=route, view=App)
                 }
             }

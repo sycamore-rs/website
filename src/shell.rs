@@ -12,12 +12,68 @@ pub enum Routes {
     Index,
     #[to("/post/<id>")]
     Post(String),
-    #[to("/book/<section>")]
-    BookSection(String),
-    #[to("/book/<section>/<doc>")]
-    BookSubsection(String, String),
+    #[to("/book/<path..>")]
+    Book(Vec<String>),
     #[not_found]
     NotFound,
+}
+
+impl Routes {
+    fn published_path(&self) -> Option<String> {
+        match self {
+            Self::Index => Some("/".to_owned()),
+            Self::Post(id) => Some(format!("/post/{id}")),
+            Self::Book(path) => {
+                crate::docs::resolve_book(path).map(|(source, page)| source.url(&page))
+            }
+            Self::NotFound => None,
+        }
+    }
+
+    pub fn exists(&self) -> bool {
+        self.published_path().is_some_and(|path| {
+            crate::docs::PAGE_PATHS
+                .binary_search(&path.as_str())
+                .is_ok()
+        })
+    }
+
+    pub fn validated(self) -> Self {
+        if self.exists() {
+            self
+        } else {
+            Self::NotFound
+        }
+    }
+
+    pub fn is_indexable(&self) -> bool {
+        if !self.exists() {
+            return false;
+        }
+        match self {
+            Self::NotFound => false,
+            Self::Book(path) => {
+                crate::docs::resolve_book(path).is_some_and(|(source, _)| source.is_latest())
+            }
+            _ => true,
+        }
+    }
+
+    pub fn canonical_url(&self) -> Option<String> {
+        if !self.is_indexable() {
+            return None;
+        }
+        let path = match self {
+            Self::Index => "/".to_owned(),
+            Self::Post(id) => format!("/post/{id}"),
+            Self::Book(path) => {
+                let (source, page) = crate::docs::resolve_book(path)?;
+                source.url(&page)
+            }
+            Self::NotFound => return None,
+        };
+        Some(format!("https://sycamore.dev{path}"))
+    }
 }
 
 /// Context value for setting the document title.
@@ -31,7 +87,10 @@ pub fn set_title(title: impl Into<String>) {
 }
 
 #[component(inline_props)]
-pub fn Shell(children: Children) -> View {
+pub fn Shell(children: Children, initial_route: Option<Routes>) -> View {
+    let initial_route = initial_route.unwrap_or(Routes::NotFound);
+    let indexable = initial_route.is_indexable();
+    let canonical = initial_route.canonical_url();
     let title = Title(create_signal(String::new()));
     provide_context(title);
 
@@ -91,6 +150,12 @@ pub fn Shell(children: Children) -> View {
                     meta(name="description", content="Sycamore is a next generation Rust UI library powered by fine-grained reactivity. Create reactive apps with effortless performance")
 
                     title { (title_static) }
+                    (if !indexable {
+                        view! { meta(name="robots", content="noindex") }
+                    } else {
+                        view! {}
+                    })
+                    (canonical.clone().map(|url| view! { link(rel="canonical", href=url) }))
 
                     link(rel="preload", href="/sycamore-website.js", r#as="script", crossorigin="")
                     link(rel="preload", href="/sycamore-website_bg.wasm", r#as="fetch", crossorigin="")
@@ -143,16 +208,108 @@ pub struct CurrentRoute(pub ReadSignal<Routes>);
 
 #[component]
 pub fn App(route: ReadSignal<Routes>) -> View {
+    // Resolve unpublished URLs identically during SSR, hydration, and navigation.
+    // In particular, a 404 must not acquire book chrome or an indexable canonical.
+    let route = create_memo(move || route.get_clone().validated());
     provide_context(CurrentRoute(route));
+    // NoHydrate owns the initial head; maintain SEO metadata on client navigation.
+    is_not_ssr! {
+        create_effect(move || {
+            let current = route.get_clone();
+            for selector in ["meta[name=robots]", "link[rel=canonical]"] {
+                if let Some(element) = document().query_selector(selector).unwrap() {
+                    element.remove();
+                }
+            }
+            let head = document().head().unwrap();
+            if !current.is_indexable() {
+                let meta = document().create_element("meta").unwrap();
+                meta.set_attribute("name", "robots").unwrap();
+                meta.set_attribute("content", "noindex").unwrap();
+                head.append_child(&meta).unwrap();
+            }
+            if let Some(url) = current.canonical_url() {
+                let link = document().create_element("link").unwrap();
+                link.set_attribute("rel", "canonical").unwrap();
+                link.set_attribute("href", &url).unwrap();
+                head.append_child(&link).unwrap();
+            }
+        });
+    }
     view! {
         layout::Layout {
             (match route.get_clone() {
                 Routes::Index => pages::index::Index(),
                 Routes::Post(id) => view! { pages::post::Post(id=id) },
-                Routes::BookSection(section) => view! { pages::book::Book(section=section) },
-                Routes::BookSubsection(section, doc) => view! { pages::book::Book(section=section, doc=doc) },
+                Routes::Book(path) => match crate::docs::resolve_book(&path) {
+                    Some((source, page)) => view! { pages::book::Book(source=source, page=page) },
+                    None => pages::not_found::NotFound(),
+                },
                 Routes::NotFound =>  { pages::not_found::NotFound() },
             })
+        }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn unknown_urls_resolve_to_non_indexable_not_found() {
+        for url in [
+            "/book/does-not-exist",
+            "/book/introduction/does-not-exist",
+            "/post/does-not-exist",
+        ] {
+            let route = Routes::default().match_path(url);
+            assert!(!route.exists(), "{url}");
+            assert!(!route.is_indexable(), "{url}");
+            assert_eq!(route.canonical_url(), None, "{url}");
+            assert_eq!(route.validated(), Routes::NotFound, "{url}");
+        }
+        for source in crate::docs::DOCS_SOURCES.iter().filter(|s| !s.is_latest()) {
+            let url = format!("/book/{}/does-not-exist", source.slug);
+            assert_eq!(
+                Routes::default().match_path(&url).validated(),
+                Routes::NotFound
+            );
+        }
+    }
+
+    #[test]
+    fn published_manifest_matches_static_generation_exactly() {
+        let mut paths = crate::content::get_static_paths()
+            .into_iter()
+            .filter(|(route, _)| *route != Routes::NotFound)
+            .map(|(route, _)| {
+                assert!(route.exists());
+                assert_eq!(route.clone().validated(), route);
+                route.published_path().unwrap()
+            })
+            .collect::<Vec<_>>();
+        paths.sort();
+        assert_eq!(paths, crate::docs::PAGE_PATHS);
+    }
+
+    #[tokio::test]
+    async fn unknown_book_and_post_render_the_404_layout_and_head() {
+        for url in ["/book/does-not-exist", "/post/does-not-exist"] {
+            let route = Routes::default().match_path(url);
+            let html = sycamore::render_to_string_await_suspense(|| {
+                view! {
+                    Shell(initial_route=route.clone()) {
+                        sycamore_router::StaticRouter(route=route, view=App)
+                    }
+                }
+            })
+            .await;
+            let head = html.split("</head>").next().unwrap();
+            assert!(head.contains("content=\"noindex\""), "{url}");
+            assert!(!head.contains("rel=\"canonical\""), "{url}");
+            assert!(html.contains("404 Not Found"), "{url}");
+            assert!(!html.contains("<server-component"), "{url}");
+            assert!(html.contains("<footer"), "{url}");
         }
     }
 }

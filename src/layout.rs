@@ -125,12 +125,8 @@ pub fn Layout(children: Children) -> View {
 
     let menu_open = create_signal(false);
     // Show the menu only on book pages.
-    let is_book_page = create_selector(move || {
-        matches!(
-            current_route.0.get_clone(),
-            Routes::BookSubsection(_, _) | Routes::BookSection(_)
-        )
-    });
+    let is_book_page =
+        create_selector(move || matches!(current_route.0.get_clone(), Routes::Book(_)));
 
     view! {
         div(class="flex flex-col min-h-screen dark:text-gray-100") {
