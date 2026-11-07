@@ -14,6 +14,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
+          # Shallow submodule clones only fetch the default branch. Fetch all
+          # history so --remote can resolve each branch configured in .gitmodules.
+          fetch-depth: 0
           submodules: true
           token: ${{ secrets.CI_TOKEN }}
 
