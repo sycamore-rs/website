@@ -4,8 +4,12 @@ use crate::server_component::ServerOnly;
 
 #[component(inline_props)]
 pub fn Post(id: String) -> View {
+    let on_load = crate::utils::use_headings_outline_callback();
     view! {
-        ServerOnly(id=format!("Post_{id}"), on_load=|| { crate::utils::prism_highlight_all(); }) {
+        ServerOnly(id=format!("Post_{id}"), on_load=move |element| {
+            crate::utils::prism_highlight_all();
+            on_load(element);
+        }) {
             PostBody(id=id)
         }
     }

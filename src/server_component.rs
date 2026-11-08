@@ -21,9 +21,9 @@ pub fn ServerOnly(
     /// The unique id of the server component.
     id: String,
     children: Children,
-    /// A function to run when the component loads.
-    #[prop(default, setter(transform = |f: impl Fn() + 'static| Some(Box::new(f) as Box<dyn Fn()>)))]
-    on_load: Option<Box<dyn Fn()>>,
+    /// Called with the mounted container after hydration or fetched content is ready.
+    #[prop(default, setter(transform = |f: impl Fn(web_sys::Element) + 'static| Some(Box::new(f) as Box<dyn Fn(web_sys::Element)>)))]
+    on_load: Option<Box<dyn Fn(web_sys::Element)>>,
 ) -> View {
     is_ssr! {
         let _ = on_load;
@@ -50,7 +50,11 @@ pub fn ServerOnly(
         let container = create_node_ref();
 
         // Fetch the component HTML over HTTP if we are not hydrating.
-        if !sycamore::web::is_hydrating() {
+        if sycamore::web::is_hydrating() {
+            if let Some(on_load) = on_load {
+                on_mount(move || on_load(container.get().unchecked_into()));
+            }
+        } else {
             let url = format!("/server_components/{id}.html");
             sycamore::futures::create_suspense_task(async move {
                 let html = Request::get(&url).send().await.expect("could not send HTTP request").text().await.expect("could not get text from response");
@@ -66,7 +70,7 @@ pub fn ServerOnly(
                 }
 
                 if let Some(on_load) = on_load {
-                    on_mount(on_load);
+                    on_mount(move || on_load(container.get().unchecked_into()));
                 }
             });
         }

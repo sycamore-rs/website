@@ -8,9 +8,13 @@ use crate::{
 #[component(inline_props)]
 pub fn Book(source: DocsSource, page: DocPage) -> View {
     let id = source.component_id(&page);
+    let create_headings_outline = crate::utils::use_headings_outline_callback();
     view! {
         sycamore::web::Suspense {
-            ServerOnly(id=id, on_load=|| { crate::utils::prism_highlight_all(); }) {
+            ServerOnly(id=id, on_load=move |element| {
+                crate::utils::prism_highlight_all();
+                create_headings_outline(element);
+            }) {
                 BookBody(source=source, page=page)
             }
         }
