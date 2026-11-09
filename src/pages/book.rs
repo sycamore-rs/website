@@ -45,7 +45,7 @@ fn BookBody(source: DocsSource, page: DocPage) -> View {
     view! {
         ServerTitle(title=title)
         div(class="flex flex-row w-full") {
-            div(class="flex-none self-start w-60 pt-8 pb-5 px-6 space-y-2 text-sm sticky top-12 max-h-[calc(100vh-3rem)] overflow-y-auto block -ml-60 sm:ml-0") {
+            div(class="flex-none self-start w-60 pt-8 pb-5 px-6 space-y-2 text-sm sticky top-14 max-h-[calc(100vh-3.5rem)] overflow-y-auto block -ml-60 sm:ml-0") {
                 BookIndex(source=source, page=page)
             }
             div(class="flex flex-1 min-w-0 items-start justify-center gap-0 sm:gap-4") {

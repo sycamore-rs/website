@@ -6,9 +6,9 @@ use crate::{CurrentRoute, Routes};
 fn Header(show_menu: ReadSignal<bool>, menu_open: Signal<bool>) -> View {
     let toggle_menu = move |_| menu_open.set(!menu_open.get());
     view! {
-        header(class="fixed top-0 z-50 w-full border-b-2 border-gray-200 bg-gray-100 dark:bg-gray-900 dark:border-gray-800") {
+        header(class="fixed top-0 z-50 w-full border-b border-gray-200 bg-gray-100 dark:bg-gray-950 dark:border-gray-800") {
             nav(class="px-4") {
-                div(class="flex flex-row justify-between items-center h-12") {
+                div(class="flex flex-row justify-between items-center h-14") {
                     div(class="flex flex-row gap-4") {
                         (if show_menu.get() {
                             view! {
@@ -28,15 +28,18 @@ fn Header(show_menu: ReadSignal<bool>, menu_open: Signal<bool>) -> View {
                             "Sycamore"
                         }
                     }
-                    div(class="flex flex-row space-x-6 text-xl *:hover:text-gray-600 dark:*:hover:text-gray-300") {
-                        a(href="/book/introduction") {
-                            i(class="bi bi-book-half", aria-label="Book")
+                    div(class="flex flex-row items-center gap-1 sm:gap-2") {
+                        a(href="/book/introduction", aria-label="Book", class="flex items-center gap-2 rounded-md px-2 lg:px-3 py-2 hover:bg-orange-500/[0.08] dark:hover:bg-orange-500/[0.12] transition-colors") {
+                            i(class="bi bi-book-half text-xl", aria-hidden="true")
+                            span(class="hidden lg:inline text-sm") { "Book" }
                         }
-                        a(href="https://github.com/sycamore-rs/sycamore") {
-                            i(class="bi bi-github", aria-label="GitHub")
+                        a(href="https://github.com/sycamore-rs/sycamore", aria-label="GitHub", class="flex items-center gap-2 rounded-md px-2 lg:px-3 py-2 hover:bg-orange-500/[0.08] dark:hover:bg-orange-500/[0.12] transition-colors") {
+                            i(class="bi bi-github text-xl", aria-hidden="true")
+                            span(class="hidden lg:inline text-sm") { "GitHub" }
                         }
-                        a(href="https://discord.gg/vDwFUmm6mU") {
-                            i(class="bi bi-discord", aria-label="Discord")
+                        a(href="https://discord.gg/vDwFUmm6mU", aria-label="Discord", class="flex items-center gap-2 rounded-md px-2 lg:px-3 py-2 hover:bg-orange-500/[0.08] dark:hover:bg-orange-500/[0.12] transition-colors") {
+                            i(class="bi bi-discord text-xl", aria-hidden="true")
+                            span(class="hidden lg:inline text-sm") { "Discord" }
                         }
                         DarkModeToggle {}
                     }
@@ -55,14 +58,14 @@ fn DarkModeToggle() -> View {
     let toggle = move |_| dark_mode.set(!dark_mode.get());
 
     view! {
-        button(title="Toggle dark mode", class="w-3 cursor-pointer", on:click=toggle) {
+        button(title="Toggle dark mode", aria-label="Toggle dark mode", class="flex items-center gap-2 rounded-md px-2 lg:px-3 py-2 cursor-pointer hover:bg-orange-500/[0.08] dark:hover:bg-orange-500/[0.12] transition-colors", on:click=toggle) {
             (if dark_mode.get() {
                 view! {
-                    i(class="bi bi-sun")
+                    i(class="bi bi-sun text-xl", aria-hidden="true")
                 }
             } else {
                 view! {
-                    i(class="bi bi-moon")
+                    i(class="bi bi-moon text-xl", aria-hidden="true")
                 }
             })
         }
@@ -131,7 +134,7 @@ pub fn Layout(children: Children) -> View {
     view! {
         div(class="flex flex-col min-h-screen dark:text-gray-100") {
             Header(menu_open=menu_open, show_menu=is_book_page)
-            main(class="mt-12 flex-grow bg-gray-50 dark:bg-gray-950") {
+            main(class="mt-14 flex-grow bg-gray-50 dark:bg-gray-950") {
                 div(class=if menu_open.get() { "transition-transform translate-x-60" } else { "transition-transform" }) {
                     (children)
                 }

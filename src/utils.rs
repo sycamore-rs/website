@@ -278,7 +278,7 @@ pub fn HeadingsOutline(headings: Vec<mdsycx::OutlineHeading>, children: Children
         .collect::<Vec<_>>();
     view! {
         div(
-            class="flex-none w-56 pt-8 pb-5 pr-2 text-sm sticky top-12 max-h-[calc(100vh-3rem)] overflow-y-auto hidden lg:block"
+            class="flex-none w-56 pt-8 pb-5 pr-2 text-sm sticky top-14 max-h-[calc(100vh-3.5rem)] overflow-y-auto hidden lg:block"
         ) {
             div {
                 p(class="-mb-1 uppercase text-xs") { "On this page" }
