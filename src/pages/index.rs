@@ -74,16 +74,16 @@ fn Counter(initial: i32) -> View {
 
             SectionHeading(content="Features")
             p(class="text-center text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto mb-4") {
-                "Less framework. More building. See what a little Rust can do."
+                "A minimal framework for Rust web apps, designed to keep boilerplate out of your way."
             }
             div(class="divide-y divide-gray-200 dark:divide-gray-800") {
                 FeatureSection(
                     number="01",
                     label="Fine-grained reactivity",
-                    title="Update only what changes.",
-                    description="Built on Rust and WebAssembly, Sycamore pairs native control with fine-grained updates. Signals track their dependencies, so changing a value updates the UI that uses it—not your entire component.",
+                    title="Signals and derived state",
+                    description="Signals store reactive state. Memos track the signals they read and recompute when those dependencies change. Views subscribe to reactive values and update the corresponding DOM nodes without re-running the component function.",
                     href="/book/introduction/adding-state",
-                    link_text="Explore reactivity",
+                    link_text="Read about reactive state",
                     filename="reactivity.rs",
                     example=r#"let mut count = create_signal(0);
 let doubled = create_memo(move || count.get() * 2);
@@ -99,30 +99,32 @@ view! {
                 FeatureSection(
                     number="02",
                     label="Type-checked UI",
-                    title="Write views. Keep Rust's guarantees.",
-                    description="Build components with a familiar, HTML-like syntax and the full power of Rust. Typed props and event handlers help catch mistakes at compile time, before they reach your users.",
-                    href="/book/introduction/your-first-app",
-                    link_text="Build your first component",
-                    filename="components.rs",
+                    title="Checked at compile time",
+                    description="Built-in HTML elements have typed attributes, DOM properties, and event handlers checked by the Rust compiler. The view macro integrates with rust-analyzer for autocompletion, inline diagnostics, and go-to-definition as you write your UI.",
+                    href="/book/guide/view-dsl",
+                    link_text="Read about the view macro",
+                    filename="elements.rs",
                     reverse=true,
-                    example=r#"#[component]
-fn Greeting(#[prop(into)] name: String) -> View {
-    view! {
-        h2 { "Hello, {name}!" }
-    }
-}
+                    example=r#"let name = create_signal(String::new());
 
 view! {
-    Greeting(name="Sycamore")
+    input(bind:value=name, placeholder="Your name")
+    button(
+        disabled=move || name.get_clone().is_empty(),
+        on_click=move |_| name.set(String::new()),
+    ) {
+        "Clear"
+    }
+    p { "Hello, {name}!" }
 }"#,
                 )
                 FeatureSection(
                     number="03",
                     label="Server-side rendering",
-                    title="Start on the server. Come alive in the browser.",
-                    description="Render your components to HTML on the server, then hydrate them in the browser to add interactivity. Prefer a client-only app? The same component model works there, too.",
+                    title="Fullstack ready",
+                    description="Sycamore is fully isomorphic: the same components can render on the server and in the browser. Build a client-rendered single-page app, or render HTML on the server and hydrate it on the client to attach reactive state and event handlers.",
                     href="/book/server-side-rendering",
-                    link_text="Learn about server rendering",
+                    link_text="Read about server-side rendering",
                     filename="server.rs",
                     example=r#"#[component]
 fn App() -> View {
@@ -136,10 +138,10 @@ let html = sycamore::render_to_string(App);"#,
                 FeatureSection(
                     number="04",
                     label="Async and Suspense",
-                    title="Give loading states a place to live.",
-                    description="Use async Rust directly in your components. Suspense shows a fallback while async work finishes, so your loading state stays right beside the content it belongs to.",
+                    title="Async components and loading boundaries",
+                    description="Async components can await data before returning a view. A Suspense boundary renders its fallback while nested async components or resources are pending, then displays the resolved content.",
                     href="/book/guide/resources-and-suspense",
-                    link_text="Meet resources and Suspense",
+                    link_text="Read about resources and Suspense",
                     filename="async.rs",
                     reverse=true,
                     example=r#"#[component]
@@ -158,10 +160,10 @@ view! {
                 FeatureSection(
                     number="05",
                     label="Built-in routing",
-                    title="A home for every page.",
-                    description="Define your routes with a Rust enum, including typed URL parameters and a not-found fallback. Sycamore's router supports client-side navigation and server-side rendering as your app grows.",
+                    title="Enum-based route matching",
+                    description="Derive Route on a Rust enum to map URL paths to variants. Path parameters are parsed into typed fields, and a designated variant handles unmatched paths. The router supports both client-side navigation and server-side rendering.",
                     href="/book/router",
-                    link_text="Find your way around the router",
+                    link_text="Read about routing",
                     filename="routes.rs",
                     example=r#"use sycamore_router::Route;
 
