@@ -25,6 +25,7 @@
 
   html[data-color-scheme='dark'] {
     @apply bg-gray-950;
+    color-scheme: dark;
   }
 
   * {
