@@ -62,8 +62,8 @@ fn Counter(initial: i32) -> View {
     let mut value = create_signal(initial);
 
     view! {
-        button(on:click=move |_| value += 1) {
-            "Count: " (value)
+        button(on_click=move |_| value += 1) {
+            "Count: {value}"
         }
     }
 }"#
@@ -73,58 +73,108 @@ fn Counter(initial: i32) -> View {
             }
 
             SectionHeading(content="Features")
-            div(class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4") {
-                FeatureCard(
-                    icon="rocket-takeoff-fill",
-                    title="Effortless Performance",
-                ) {
-                    p {
-                        "Sycamore is built on top of "
-                        a(href="https://www.rust-lang.org", class="underline") { "Rust" } " and "
-                        a(href="https://webassembly.org/", class="underline") { "WebAssembly" }
-                        ", giving you full control over performance."
-                    }
-                }
-                FeatureCard(
-                    icon="arrow-left-right",
-                    title="Fine-Grained Reactivity",
-                ) {
-                    p {
-                        "Sycamore's reactivity system is fine-grained, meaning that only the parts of your app that need to be updated will be."
-                    }
-                }
-                FeatureCard(
-                    icon="body-text",
-                    title="Type-checked UI",
-                ) {
-                    p {
-                        "Whether you use our custom DSL or the builder API, Sycamore type-checks your code to catch errors at compile-time."
-                    }
-                }
-                FeatureCard(
-                    icon="database-fill",
-                    title="Server Side Rendering (SSR)",
-                ) {
-                    p {
-                        "Sycamore supports Server Side Rendering out of the box. If you don't need it, however, SPA mode works just as well."
-                    }
-                }
-                FeatureCard(
-                    icon="arrow-clockwise",
-                    title="Async and Suspense"
-                ) {
-                    p {
-                        "Easily load and display asynchronous data using the resources and suspense API with first-class async/await support."
-                    }
-                }
-                FeatureCard(
-                    icon="grid-3x3",
-                    title="Built-in Routing",
-                ) {
-                    p {
-                        "Sycamore comes with a built-in router that supports both client-side navigation and server side rendering."
-                    }
-                }
+            p(class="text-center text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto mb-4") {
+                "Less framework. More building. See what a little Rust can do."
+            }
+            div(class="divide-y divide-gray-200 dark:divide-gray-800") {
+                FeatureSection(
+                    number="01",
+                    label="Fine-grained reactivity",
+                    title="Update only what changes.",
+                    description="Built on Rust and WebAssembly, Sycamore pairs native control with fine-grained updates. Signals track their dependencies, so changing a value updates the UI that uses it—not your entire component.",
+                    href="/book/introduction/adding-state",
+                    link_text="Explore reactivity",
+                    filename="reactivity.rs",
+                    example=r#"let mut count = create_signal(0);
+let doubled = create_memo(move || count.get() * 2);
+
+view! {
+    button(on_click=move |_| count += 1) {
+        "Count: {count}"
+    }
+    // Only this text updates when doubled changes.
+    p { "Doubled: {doubled}" }
+}"#,
+                )
+                FeatureSection(
+                    number="02",
+                    label="Type-checked UI",
+                    title="Write views. Keep Rust's guarantees.",
+                    description="Build components with a familiar, HTML-like syntax and the full power of Rust. Typed props and event handlers help catch mistakes at compile time, before they reach your users.",
+                    href="/book/introduction/your-first-app",
+                    link_text="Build your first component",
+                    filename="components.rs",
+                    reverse=true,
+                    example=r#"#[component]
+fn Greeting(#[prop(into)] name: String) -> View {
+    view! {
+        h2 { "Hello, {name}!" }
+    }
+}
+
+view! {
+    Greeting(name="Sycamore")
+}"#,
+                )
+                FeatureSection(
+                    number="03",
+                    label="Server-side rendering",
+                    title="Start on the server. Come alive in the browser.",
+                    description="Render your components to HTML on the server, then hydrate them in the browser to add interactivity. Prefer a client-only app? The same component model works there, too.",
+                    href="/book/server-side-rendering",
+                    link_text="Learn about server rendering",
+                    filename="server.rs",
+                    example=r#"#[component]
+fn App() -> View {
+    view! {
+        h1 { "Hello from the server." }
+    }
+}
+
+let html = sycamore::render_to_string(App);"#,
+                )
+                FeatureSection(
+                    number="04",
+                    label="Async and Suspense",
+                    title="Give loading states a place to live.",
+                    description="Use async Rust directly in your components. Suspense shows a fallback while async work finishes, so your loading state stays right beside the content it belongs to.",
+                    href="/book/guide/resources-and-suspense",
+                    link_text="Meet resources and Suspense",
+                    filename="async.rs",
+                    reverse=true,
+                    example=r#"#[component]
+async fn Welcome() -> View {
+    // Your async data-loading function.
+    let name = fetch_name().await;
+    view! { p { "Welcome, {name}" } }
+}
+
+view! {
+    Suspense(fallback=|| view! { "Loading…" }) {
+        Welcome {}
+    }
+}"#,
+                )
+                FeatureSection(
+                    number="05",
+                    label="Built-in routing",
+                    title="A home for every page.",
+                    description="Define your routes with a Rust enum, including typed URL parameters and a not-found fallback. Sycamore's router supports client-side navigation and server-side rendering as your app grows.",
+                    href="/book/router",
+                    link_text="Find your way around the router",
+                    filename="routes.rs",
+                    example=r#"use sycamore_router::Route;
+
+#[derive(Route, Clone)]
+enum AppRoutes {
+    #[to("/")]
+    Home,
+    #[to("/hello/<name>")]
+    Hello { name: String },
+    #[not_found]
+    NotFound,
+}"#,
+                )
             }
 
             SectionHeading(content="Community")
@@ -151,24 +201,46 @@ fn SectionHeading(
 
 #[cfg_ssr]
 #[component(inline_props)]
-fn FeatureIcon(icon: &'static str) -> View {
+fn FeatureSection(
+    number: &'static str,
+    label: &'static str,
+    title: &'static str,
+    description: &'static str,
+    href: &'static str,
+    link_text: &'static str,
+    filename: &'static str,
+    example: &'static str,
+    #[prop(default)] reverse: bool,
+) -> View {
+    let layout = if reverse {
+        "flex flex-col md:flex-row-reverse items-center gap-8 lg:gap-16 py-12 lg:py-16"
+    } else {
+        "flex flex-col md:flex-row items-center gap-8 lg:gap-16 py-12 lg:py-16"
+    };
     view! {
-        div(class="h-12 w-12 bg-orange-400 text-white text-2xl rounded-lg flex items-center justify-center mx-auto mb-3") {
-            i(class=format!("bi bi-{icon}"))
-        }
-    }
-}
-
-#[cfg_ssr]
-#[component(inline_props)]
-fn FeatureCard(icon: &'static str, title: &'static str, children: Children) -> View {
-    view! {
-        div(class="hover:shadow-lg hover:bg-white dark:hover:bg-gray-900 rounded-lg py-4 px-5 transition mx-auto max-w-[500px]") {
-            FeatureIcon(icon=icon)
-            h3(class="text-xl font-semibold text-center") {
-                (title)
+        section(class=layout) {
+            div(class="w-full md:w-1/2 min-w-0") {
+                p(class="flex items-center gap-3 text-sm font-semibold tracking-wider uppercase text-orange-800 dark:text-orange-400 mb-4") {
+                    span(class="font-mono text-orange-800/50 dark:text-orange-400/50", aria-hidden="true") { (number) }
+                    (label)
+                }
+                h3(class="text-3xl lg:text-4xl font-bold tracking-tight mb-5") { (title) }
+                p(class="text-lg leading-relaxed text-gray-600 dark:text-gray-400") { (description) }
+                a(href=href, class="inline-flex items-center gap-2 mt-6 font-semibold text-orange-800 dark:text-orange-400 underline decoration-orange-400/40 underline-offset-4 hover:decoration-current focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-orange-500 rounded-sm") {
+                    (link_text)
+                    span(aria-hidden="true") { "→" }
+                }
             }
-            (children)
+            div(class="w-full md:w-1/2 min-w-0 overflow-hidden rounded-xl border border-gray-700 shadow-lg") {
+                div(class="flex items-center gap-2 bg-gray-800 px-5 py-3 border-b border-gray-700 text-gray-400 text-xs font-mono") {
+                    span(class="h-2 w-2 rounded-full bg-orange-400", aria-hidden="true") {}
+                    (filename)
+                    span(class="ml-auto text-gray-400") { "Rust" }
+                }
+                pre(class="language-rust !m-0 !rounded-none text-xs sm:text-sm !overflow-x-auto", tabindex="0", aria-label=format!("{label} code example")) {
+                    code(class="language-rust") { (example) }
+                }
+            }
         }
     }
 }
