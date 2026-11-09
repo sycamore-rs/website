@@ -24,8 +24,8 @@ fn IndexBody() -> View {
     let latest_release = crate::api_stats::get_latest_release();
     view! {
         div(class="flex flex-col container px-2 md:px-20 mx-auto pb-10") {
-            div(class="mt-10 md:mt-20 flex flex-col md:flex-row gap-10 items-center justify-between") {
-                div(class="max-w-[530px]") {
+            div(class="mt-10 md:mt-20 w-full max-w-3xl mx-auto px-4 sm:px-6") {
+                div(class="max-w-2xl") {
                     h1(class="text-4xl sm:text-5xl pb-5 font-bold bg-gradient-to-br from-orange-800 from-20% to-orange-800 to-80% via-orange-950 dark:from-orange-200 dark:to-orange-500 dark:via-orange-400 text-transparent bg-clip-text") {
                         "Reactive Apps with"
                         br {}
@@ -40,7 +40,7 @@ fn IndexBody() -> View {
                             "Read the Book"
                         }
                         a(class="block px-5 py-1.5 min-w-40 text-center text-white bg-gray-800 rounded-full hover:bg-gray-900 transition-colors", href="https://play.sycamore.dev", data-umami-event="Playground") {
-                            "Try in Browser"
+                            "Open Playground"
                         }
                         a(class="block px-5 py-1.5 min-w-40 text-center text-white bg-gray-800 rounded-full hover:bg-gray-900 transition-colors", href="https://discord.gg/vDwFUmm6mU", data-umami-event="Join discord") {
                             "Join the Discord"
@@ -49,25 +49,6 @@ fn IndexBody() -> View {
 
                     p(class="text-sm mt-4 text-gray-800 dark:text-gray-400") {
                         "Latest Release: " a(href=latest_release.html_url, class="underline") { (latest_release.name) }
-                    }
-                }
-                // Code example
-                div(class="flex-grow w-full md:w-auto") {
-                    pre(class="bg-gray-800 rounded-lg text-white text-xs sm:text-sm md:text-base overflow-x-hidden w-full md:max-w-[550px] shadow-lg !mx-auto language-rust") {
-                        code(class="language-rust") {
-                            r#"use sycamore::prelude::*;
-
-#[component]
-fn Counter(initial: i32) -> View {
-    let mut value = create_signal(initial);
-
-    view! {
-        button(on_click=move |_| value += 1) {
-            "Count: {value}"
-        }
-    }
-}"#
-                        }
                     }
                 }
             }
