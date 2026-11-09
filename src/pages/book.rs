@@ -44,34 +44,36 @@ fn BookBody(source: DocsSource, page: DocPage) -> View {
 
     view! {
         ServerTitle(title=title)
-        div(class="flex flex-row gap-0 sm:gap-4 w-full justify-center") {
-            div(class="flex-none w-44 pt-8 pb-5 px-2 space-y-2 text-sm sticky top-12 max-h-[calc(100vh-3rem)] overflow-y-auto block -ml-44 sm:ml-0") {
+        div(class="flex flex-row w-full") {
+            div(class="flex-none self-start w-60 pt-8 pb-5 px-6 space-y-2 text-sm sticky top-12 max-h-[calc(100vh-3rem)] overflow-y-auto block -ml-60 sm:ml-0") {
                 BookIndex(source=source, page=page)
             }
-            div(class="grow-0 min-w-0 px-2 pt-5 pb-10 prose md:w-[80ch] dark:prose-invert") {
-                // Keep version navigation visible on mobile as well as desktop.
-                nav(aria-label="Documentation versions", class="not-prose mb-6 border-b border-neutral-300 dark:border-neutral-700 pb-3 text-sm") {
-                    p(class="font-semibold mb-2") { "Documentation: " (source.label()) }
-                    ul(class="flex flex-wrap gap-x-4 gap-y-2") { (versions) }
-                }
-                (if !source.is_latest() {
-                    let latest_url = latest_url.clone();
-                    view! {
-                        p(class="not-prose mb-5 rounded bg-amber-100 dark:bg-amber-950 p-3 text-sm") {
-                            "You are reading release documentation. "
-                            a(href=latest_url.clone(), class="underline") { "Read the latest development docs." }
+            div(class="flex flex-1 min-w-0 items-start justify-center gap-0 sm:gap-4") {
+                div(class="grow-0 min-w-0 px-2 pt-5 pb-10 prose md:w-[80ch] dark:prose-invert") {
+                    // Keep version navigation visible on mobile as well as desktop.
+                    nav(aria-label="Documentation versions", class="not-prose mb-6 border-b border-neutral-300 dark:border-neutral-700 pb-3 text-sm") {
+                        p(class="font-semibold mb-2") { "Documentation: " (source.label()) }
+                        ul(class="flex flex-wrap gap-x-4 gap-y-2") { (versions) }
+                    }
+                    (if !source.is_latest() {
+                        let latest_url = latest_url.clone();
+                        view! {
+                            p(class="not-prose mb-5 rounded bg-amber-100 dark:bg-amber-950 p-3 text-sm") {
+                                "You are reading release documentation. "
+                                a(href=latest_url.clone(), class="underline") { "Read the latest development docs." }
+                            }
+                        }
+                    } else { view! {} })
+                    mdsycx::MDSycX(body=parsed.body)
+                    div(class="mt-6 mr-2 text-right") {
+                        a(class="text-sm", href=github_edit_link) {
+                            i(class="bi bi-pencil mr-2")
+                            "Edit this page on GitHub"
                         }
                     }
-                } else { view! {} })
-                mdsycx::MDSycX(body=parsed.body)
-                div(class="mt-6 mr-2 text-right") {
-                    a(class="text-sm", href=github_edit_link) {
-                        i(class="bi bi-pencil mr-2")
-                        "Edit this page on GitHub"
-                    }
                 }
+                crate::utils::HeadingsOutline(headings=parsed.headings) {}
             }
-            crate::utils::HeadingsOutline(headings=parsed.headings) {}
         }
     }
 }
@@ -126,6 +128,7 @@ fn BookIndex(source: DocsSource, page: DocPage) -> View {
                     } else {
                         "hover:text-orange-700 dark:hover:text-orange-500 transition-colors"
                     };
+                    let class = format!("block rounded-md -mx-2 px-2 py-0.5 hover:bg-orange-500/[0.08] dark:hover:bg-orange-500/[0.12] transition-colors {class}");
                     let title = item.title.clone();
                     view! { li(class="mt-0.5") { a(href=href, class=class) { (title) } } }
                 })
@@ -136,6 +139,7 @@ fn BookIndex(source: DocsSource, page: DocPage) -> View {
             } else {
                 "font-semibold hover:text-orange-700 dark:hover:text-orange-500 transition-colors"
             };
+            let class = format!("block rounded-md -mx-2 px-2 py-0.5 hover:bg-orange-500/[0.08] dark:hover:bg-orange-500/[0.12] transition-colors {class}");
             let title = section.title.clone();
             view! {
                 div {

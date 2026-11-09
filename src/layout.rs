@@ -132,7 +132,7 @@ pub fn Layout(children: Children) -> View {
         div(class="flex flex-col min-h-screen dark:text-gray-100") {
             Header(menu_open=menu_open, show_menu=is_book_page)
             main(class="mt-12 flex-grow bg-gray-50 dark:bg-gray-950") {
-                div(class=if menu_open.get() { "transition-transform translate-x-44" } else { "transition-transform" }) {
+                div(class=if menu_open.get() { "transition-transform translate-x-60" } else { "transition-transform" }) {
                     (children)
                 }
             }

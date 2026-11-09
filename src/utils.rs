@@ -260,7 +260,7 @@ pub fn HeadingsOutline(headings: Vec<mdsycx::OutlineHeading>, children: Children
         .into_iter()
         .map(|heading| {
             let href = format!("#{}", heading.id);
-            let class = "hover:text-orange-700 dark:hover:text-orange-500 transition-colors";
+            let class = "block rounded-md px-2 py-0.5 hover:bg-orange-500/[0.08] dark:hover:bg-orange-500/[0.12] hover:text-orange-700 dark:hover:text-orange-500 transition-colors";
             match heading.level {
                 1 => view! {},
                 2 => view! {
