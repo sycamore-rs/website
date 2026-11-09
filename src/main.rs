@@ -1,11 +1,9 @@
-use sycamore::{prelude::*, web::cfg_ssr_item};
+use sycamore::prelude::*;
 
-cfg_ssr_item!(
+is_ssr!(
     pub mod content;
-);
-cfg_ssr_item! {
     pub mod api_stats;
-}
+);
 pub mod docs;
 pub mod layout;
 pub mod pages;
