@@ -341,24 +341,44 @@ fn NewsList() -> View {
         .collect::<Vec<_>>();
     posts.sort_by_key(|(_, post)| post.front_matter.date);
 
-    posts
+    let entries = posts
         .into_iter()
         .rev()
         .map(|(id, post)| {
+            let published = post.front_matter.date;
+            let month = [
+                "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+                "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
+            ][published.month as usize - 1];
+            let date = format!("{month} {}, {}", published.day, published.year);
+            let datetime = format!("{:04}-{:02}-{:02}", published.year, published.month, published.day);
             view! {
-                a(href=format!("/post/{id}"), class="mt-5") {
-                    p(class="text-xs") {
-                        (post.front_matter.date.to_string())
-                    }
-                    p(class="text-2xl font-semibold") {
-                        (post.front_matter.title.clone())
-                    }
-                    p(class="text-gray-800 dark:text-gray-400") {
-                        (post.front_matter.description.clone())
+                article(class="py-7 sm:py-8 first:pt-0 border-b border-gray-200 dark:border-gray-800 last:border-b-0") {
+                    a(href=format!("/post/{id}"), class="group flex flex-col sm:flex-row gap-3 sm:gap-8 rounded-sm focus-visible:outline-2 focus-visible:outline-offset-8 focus-visible:outline-orange-500") {
+                        time(datetime=datetime, class="sm:w-28 shrink-0 sm:pt-1.5 whitespace-nowrap text-sm font-mono tabular-nums text-gray-500 dark:text-gray-400") {
+                            (date)
+                        }
+                        div(class="flex-1 min-w-0") {
+                            h3(class="flex items-start justify-between gap-4 text-xl sm:text-2xl font-semibold tracking-tight group-hover:text-orange-800 dark:group-hover:text-orange-400 transition-colors") {
+                                span { (post.front_matter.title.clone()) }
+                                span(class="shrink-0 text-orange-800 dark:text-orange-400", aria-hidden="true") { "→" }
+                            }
+                            p(class="mt-2 text-gray-600 dark:text-gray-400 leading-relaxed") {
+                                (post.front_matter.description.clone())
+                            }
+                        }
                     }
                 }
             }
         })
-        .collect::<Vec<_>>()
-        .into()
+        .collect::<Vec<_>>();
+
+    view! {
+        p(class="text-center text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto mb-10") {
+            "Releases, development updates, and notes from the Sycamore team."
+        }
+        div(class="w-full max-w-3xl mx-auto px-4 sm:px-6") {
+            (entries)
+        }
+    }
 }
