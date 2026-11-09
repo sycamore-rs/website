@@ -150,12 +150,12 @@ pub fn Shell(children: Children, initial_route: Option<Routes>) -> View {
                     meta(name="description", content="Sycamore is a next generation Rust UI library powered by fine-grained reactivity. Create reactive apps with effortless performance")
 
                     title { (title_static) }
-                    (if !indexable {
-                        view! { meta(name="robots", content="noindex") }
-                    } else {
-                        view! {}
-                    })
-                    (canonical.clone().map(|url| view! { link(rel="canonical", href=url) }))
+                    if !indexable {
+                        meta(name="robots", content="noindex")
+                    }
+                    if let Some(canonical) = canonical {
+                        link(rel="canonical", href=canonical)
+                    }
 
                     link(rel="preload", href="/sycamore-website.js", r#as="script", crossorigin="")
                     link(rel="preload", href="/sycamore-website_bg.wasm", r#as="fetch", crossorigin="")
@@ -179,14 +179,9 @@ pub fn Shell(children: Children, initial_route: Option<Routes>) -> View {
 
                     sycamore::web::HydrationScript {}
 
-                    (if option_env!("TRUNK_AUTO_RELOAD").is_some() {
-                        view! {
-                            script(dangerously_set_inner_html=AUTORELOAD)
-                        }
-                    } else {
-                        view! {}
-                    })
-
+                    if option_env!("TRUNK_AUTO_RELOAD").is_some() {
+                        script(dangerously_set_inner_html=AUTORELOAD)
+                    }
                     // Synchronously check if we are in dark mode or not.
                     // If so, set the `data-color-scheme` attribute to "dark" and add the dark class to the body.
                     script(dangerously_set_inner_html=

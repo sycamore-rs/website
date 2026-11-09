@@ -10,36 +10,35 @@ fn Header(show_menu: ReadSignal<bool>, menu_open: Signal<bool>) -> View {
             nav(class="px-4") {
                 div(class="flex flex-row justify-between items-center h-14") {
                     div(class="flex flex-row gap-4") {
-                        (if show_menu.get() {
-                            view! {
-                                button(class="inline-block sm:hidden hover:text-gray-600", r#type="button", on:click=toggle_menu) {
-                                    (if menu_open.get() {
-                                        view! { i(class="bi bi-x-lg", aria-label="Close menu") }
-                                    } else {
-                                        view! { i(class="bi bi-list", aria-label="Open menu") }
-                                    })
-                                }
+                        if show_menu.get() {
+                            button(class="inline-block sm:hidden hover:text-gray-600", r#type="button", on:click=toggle_menu) {
+                                (if menu_open.get() {
+                                    view! { i(class="bi bi-x-lg", aria-label="Close menu") }
+                                } else {
+                                    view! { i(class="bi bi-list", aria-label="Open menu") }
+                                })
                             }
-                        } else {
-                            view! {}
-                        })
+                        }
                         a(class="flex flex-row items-center hover:underline font-semibold", href="/") {
                             img(src="/logo.svg", alt="Sycamore Logo", class="h-10 w-10 mr-2")
                             "Sycamore"
                         }
                     }
                     div(class="flex flex-row items-center gap-1 sm:gap-2") {
-                        a(href="/book/introduction", aria-label="Book", class="flex items-center gap-2 rounded-md px-2 lg:px-3 py-2 hover:bg-orange-500/[0.08] dark:hover:bg-orange-500/[0.12] transition-colors") {
+                        a(href="/book/introduction", aria-label="Book", class="flex items-center gap-2 rounded-md px-2 lg:px-3 py-2 hover:text-gray-600 dark:hover:text-gray-300 transition-colors") {
                             i(class="bi bi-book-half text-xl", aria-hidden="true")
                             span(class="hidden lg:inline text-sm") { "Book" }
                         }
-                        a(href="https://github.com/sycamore-rs/sycamore", aria-label="GitHub", class="flex items-center gap-2 rounded-md px-2 lg:px-3 py-2 hover:bg-orange-500/[0.08] dark:hover:bg-orange-500/[0.12] transition-colors") {
+                        a(href="https://github.com/sycamore-rs/sycamore", target="_blank", rel="noopener", aria-label="GitHub", class="flex items-center gap-2 rounded-md px-2 lg:px-3 py-2 hover:text-gray-600 dark:hover:text-gray-300 transition-colors") {
                             i(class="bi bi-github text-xl", aria-hidden="true")
-                            span(class="hidden lg:inline text-sm") { "GitHub" }
+                            span(class="hidden lg:inline text-sm") {
+                                crate::server_component::ServerOnly(id="HeaderGitHubStars".to_string()) {
+                                    GitHubStars {}
+                                }
+                            }
                         }
-                        a(href="https://discord.gg/vDwFUmm6mU", aria-label="Discord", class="flex items-center gap-2 rounded-md px-2 lg:px-3 py-2 hover:bg-orange-500/[0.08] dark:hover:bg-orange-500/[0.12] transition-colors") {
+                        a(href="https://discord.gg/vDwFUmm6mU", target="_blank", rel="noopener", aria-label="Discord", class="flex items-center gap-2 rounded-md px-2 lg:px-3 py-2 hover:text-gray-600 dark:hover:text-gray-300 transition-colors") {
                             i(class="bi bi-discord text-xl", aria-hidden="true")
-                            span(class="hidden lg:inline text-sm") { "Discord" }
                         }
                         DarkModeToggle {}
                     }
@@ -47,6 +46,20 @@ fn Header(show_menu: ReadSignal<bool>, menu_open: Signal<bool>) -> View {
             }
         }
     }
+}
+
+#[cfg_ssr]
+#[component]
+fn GitHubStars() -> View {
+    let stars = crate::api_stats::get_repo_stats().stargazers_count;
+    let hundreds = (stars as f64 / 100.0).round() as u32;
+    view! { (format!("{}.{}k", hundreds / 10, hundreds % 10)) }
+}
+
+#[cfg_not_ssr]
+#[component]
+fn GitHubStars() -> View {
+    unreachable!()
 }
 
 #[derive(Clone, Copy)]
@@ -58,16 +71,12 @@ fn DarkModeToggle() -> View {
     let toggle = move |_| dark_mode.set(!dark_mode.get());
 
     view! {
-        button(title="Toggle dark mode", aria-label="Toggle dark mode", class="flex items-center gap-2 rounded-md px-2 lg:px-3 py-2 cursor-pointer hover:bg-orange-500/[0.08] dark:hover:bg-orange-500/[0.12] transition-colors", on:click=toggle) {
-            (if dark_mode.get() {
-                view! {
-                    i(class="bi bi-sun text-xl", aria-hidden="true")
-                }
+        button(title="Toggle dark mode", aria-label="Toggle dark mode", class="flex items-center gap-2 rounded-md px-2 lg:px-3 py-2 cursor-pointer hover:text-gray-600 dark:hover:text-gray-300 transition-colors", on:click=toggle) {
+            if dark_mode.get() {
+                i(class="bi bi-sun text-xl", aria-hidden="true")
             } else {
-                view! {
-                    i(class="bi bi-moon text-xl", aria-hidden="true")
-                }
-            })
+                i(class="bi bi-moon text-xl", aria-hidden="true")
+            }
         }
     }
 }
@@ -140,11 +149,9 @@ pub fn Layout(children: Children) -> View {
                 }
             }
             // Don't show the footer on book pages since they have a different layout.
-            (if !is_book_page.get() {
-                view! { Footer {} }
-            } else {
-                view! {}
-            })
+            if !is_book_page.get() {
+                Footer {}
+            }
         }
     }
 }
