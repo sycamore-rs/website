@@ -233,15 +233,15 @@ pub fn App(route: ReadSignal<Routes>) -> View {
     }
     view! {
         layout::Layout {
-            (match route.get_clone() {
+            match route.get_clone() {
                 Routes::Index => pages::index::Index(),
-                Routes::Post(id) => view! { pages::post::Post(id=id) },
+                Routes::Post(id) => pages::post::Post(id=id),
                 Routes::Book(path) => match crate::docs::resolve_book(&path) {
-                    Some((source, page)) => view! { pages::book::Book(source=source, page=page) },
+                    Some((source, page)) => pages::book::Book(source=source, page=page),
                     None => pages::not_found::NotFound(),
                 },
                 Routes::NotFound =>  { pages::not_found::NotFound() },
-            })
+            }
         }
     }
 }
