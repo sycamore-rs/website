@@ -260,35 +260,73 @@ fn CommunitySection() -> View {
     let crates_io_downloads = crate::api_stats::get_crate_io_stats()._crate.downloads;
 
     view! {
-        div(class="grid grid-rows-3 sm:grid-rows-1 sm:grid-cols-3 text-2xl font-bold text-center divide-gray-200 divide-y-2 sm:divide-y-0 sm:divide-x-2 divide-solid rounded-lg max-w-[1000px] mx-auto") {
-            div(class="px-4") {
-                (format!("{stars_text} Stars"))
-                p(class="text-sm font-normal") { "on GitHub" }
-            }
-            div(class="px-4") {
-                (format!("{} Contributors", contributors_len))
-                p(class="text-sm font-normal") { "on GitHub" }
-            }
-            div(class="px-4") {
-                (format!("{}k Downloads", crates_io_downloads / 1000))
-                p(class="text-sm font-normal") { "on crates.io" }
-            }
+        p(class="text-center text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto mb-8") {
+            "An open-source project built by people who use it. Join the conversation, contribute code, or support development."
         }
-        div(class="mt-5 text-center") {
-            p { "Sycamore is made possible by all our " a(class="underline", href="https://github.com/sycamore-rs/sycamore/graphs/contributors") { "community contributors" } ". Thank you!" }
-
-            div(class="mx-auto my-2 sm:max-w-[800px] flex flex-wrap justify-center gap-2") {
-                Indexed(
-                    list=contributors,
-                    view=|contributor| view! {
-                        a(href=contributor.html_url) {
-                            img(src=contributor.avatar_url, title=contributor.login, class="rounded-full w-12 h-12 hover:shadow-lg transition", loading="lazy")
+        div(class="w-full max-w-3xl mx-auto px-4 sm:px-6") {
+            div(class="flex flex-col sm:flex-row gap-2 sm:gap-6 mb-10") {
+                a(href="https://github.com/sycamore-rs/sycamore", class="flex-1 flex items-center justify-center gap-3 px-4 py-4 hover:bg-orange-50 dark:hover:bg-orange-950/20 transition-colors focus-visible:outline-2 focus-visible:outline-offset-[-4px] focus-visible:outline-orange-500") {
+                    i(class="bi bi-github text-xl text-orange-800 dark:text-orange-400", aria-hidden="true") {}
+                    div {
+                        p(class="text-2xl font-bold tracking-tight tabular-nums") { (stars_text) }
+                        p(class="text-xs text-gray-600 dark:text-gray-400") { "GitHub stars" }
+                    }
+                }
+                a(href="https://github.com/sycamore-rs/sycamore/graphs/contributors", class="flex-1 flex items-center justify-center gap-3 px-4 py-4 hover:bg-orange-50 dark:hover:bg-orange-950/20 transition-colors focus-visible:outline-2 focus-visible:outline-offset-[-4px] focus-visible:outline-orange-500") {
+                    i(class="bi bi-people text-xl text-orange-800 dark:text-orange-400", aria-hidden="true") {}
+                    div {
+                        p(class="text-2xl font-bold tracking-tight tabular-nums") { (contributors_len) }
+                        p(class="text-xs text-gray-600 dark:text-gray-400") { "Contributors" }
+                    }
+                }
+                a(href="https://crates.io/crates/sycamore", class="flex-1 flex items-center justify-center gap-3 px-4 py-4 hover:bg-orange-50 dark:hover:bg-orange-950/20 transition-colors focus-visible:outline-2 focus-visible:outline-offset-[-4px] focus-visible:outline-orange-500") {
+                    i(class="bi bi-box-seam text-xl text-orange-800 dark:text-orange-400", aria-hidden="true") {}
+                    div {
+                        p(class="text-2xl font-bold tracking-tight tabular-nums") { (format!("{}k", crates_io_downloads / 1000)) }
+                        p(class="text-xs text-gray-600 dark:text-gray-400") { "Downloads on crates.io" }
+                    }
+                }
+            }
+            div(class="flex flex-col gap-10") {
+                div(class="flex-1 min-w-0") {
+                    h3(class="text-2xl font-bold mb-3") { "Built together" }
+                    p(class="text-gray-600 dark:text-gray-400 leading-relaxed") {
+                        "Thanks to everyone who contributes code, improves the docs, and reports bugs. There are plenty of ways to get involved, whether you're new to Rust or already building with Sycamore."
+                    }
+                    div(class="flex flex-wrap gap-2 my-6") {
+                        Indexed(
+                            list=contributors,
+                            view=|contributor| {
+                                let alt = format!("{} on GitHub", contributor.login);
+                                view! {
+                                    a(href=contributor.html_url, class="rounded-full hover:ring-2 hover:ring-orange-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-500 transition-shadow") {
+                                        img(src=contributor.avatar_url, alt=alt, title=contributor.login, class="rounded-full w-10 h-10 sm:w-12 sm:h-12 bg-gray-100 dark:bg-gray-800", loading="lazy", width="48", height="48")
+                                    }
+                                }
+                            }
+                        )
+                    }
+                    div(class="flex flex-wrap gap-x-6 gap-y-3 text-sm font-semibold") {
+                        a(class="inline-flex items-center gap-2 text-orange-800 dark:text-orange-400 underline underline-offset-4 decoration-orange-400/40 hover:decoration-current focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-orange-500 rounded-sm", href="/book/contributing") {
+                            "Contribution guide" span(aria-hidden="true") { "→" }
+                        }
+                        a(class="inline-flex items-center gap-2 text-orange-800 dark:text-orange-400 underline underline-offset-4 decoration-orange-400/40 hover:decoration-current focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-orange-500 rounded-sm", href="https://discord.gg/vDwFUmm6mU", data-umami-event="Community discord") {
+                            i(class="bi bi-discord", aria-hidden="true") {}
+                            "Join the Discord"
                         }
                     }
-                )
+                }
+                div(class="flex flex-col items-start") {
+                    h3(class="text-lg font-semibold mb-3") { "Support development" }
+                    p(class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed mb-4") {
+                        "You can also support Sycamore's ongoing development by sponsoring Luke, the project's creator and maintainer."
+                    }
+                    a(href="https://github.com/sponsors/lukechu10", class="inline-flex items-center gap-2 text-sm font-semibold text-gray-700 dark:text-gray-300 underline underline-offset-4 decoration-gray-300 dark:decoration-gray-700 hover:text-orange-800 dark:hover:text-orange-400 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-orange-500 rounded-sm", data-umami-event="GitHub sponsor") {
+                        i(class="bi bi-heart", aria-hidden="true") {}
+                        "Sponsor on GitHub"
+                    }
+                }
             }
-
-            p { "Interested in contributing as well? Check out our " a(class="underline", href="https://github.com/sycamore-rs/sycamore/blob/main/CONTRIBUTING.md") { "contribution guide" } "." }
         }
     }
 }
