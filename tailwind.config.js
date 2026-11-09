@@ -9,6 +9,12 @@ module.exports = {
 				DEFAULT: {
 					css: {
 						maxWidth: "80ch",
+						"code::before": {
+							content: "none",
+						},
+						"code::after": {
+							content: "none",
+						},
 						"--tw-prose-pre-bg": "var(--color-codeblock)",
 						"--tw-prose-pre-code": "var(--color-codeblock-code)",
 						pre: {
