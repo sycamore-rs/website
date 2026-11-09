@@ -6,3 +6,7 @@
 	path = checkouts/v0.9
 	url = https://github.com/sycamore-rs/sycamore
 	branch = v0.9
+[submodule "checkouts/v0.10"]
+	path = checkouts/v0.10
+	url = https://github.com/sycamore-rs/sycamore
+	branch = v0.10

@@ -12,39 +12,37 @@
   --color-codeblock-code: #ebdbb2;
 }
 
-@layer components {
-  .book-index-scrollbar {
+@layer base {
+  html {
     --scrollbar-track: var(--color-gray-50);
     --scrollbar-thumb: var(--color-gray-400);
     scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
   }
 
-  [data-color-scheme='dark'] .book-index-scrollbar {
+  html[data-color-scheme='dark'] {
     --scrollbar-track: var(--color-gray-950);
     --scrollbar-thumb: var(--color-gray-600);
   }
 
   /* Fallback for browsers without scrollbar-color support. */
   @supports not (scrollbar-color: auto) {
-    .book-index-scrollbar::-webkit-scrollbar {
+    *::-webkit-scrollbar {
       width: 12px;
+      height: 12px;
       background: var(--scrollbar-track);
     }
 
-    .book-index-scrollbar::-webkit-scrollbar-track,
-    .book-index-scrollbar::-webkit-scrollbar-corner {
+    *::-webkit-scrollbar-track,
+    *::-webkit-scrollbar-corner {
       background: var(--scrollbar-track);
     }
 
-    .book-index-scrollbar::-webkit-scrollbar-thumb {
+    *::-webkit-scrollbar-thumb {
       background: var(--scrollbar-thumb);
       border: 3px solid var(--scrollbar-track);
       border-radius: 9999px;
     }
   }
-}
-
-@layer base {
 
   html,
   body {

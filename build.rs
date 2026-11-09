@@ -17,6 +17,13 @@ fn git_config(args: &[&str]) -> String {
     String::from_utf8(output.stdout).unwrap()
 }
 
+fn version_key(slug: &str) -> Option<Vec<u32>> {
+    slug.strip_prefix('v')?
+        .split('.')
+        .map(|part| part.parse().ok())
+        .collect()
+}
+
 fn main() {
     println!("cargo:rerun-if-changed=.gitmodules");
     println!("cargo:rerun-if-env-changed=DOCS_DIR");
@@ -45,6 +52,7 @@ fn main() {
     sources.sort_by(|a, b| {
         (a.0 != "main")
             .cmp(&(b.0 != "main"))
+            .then_with(|| version_key(&b.0).cmp(&version_key(&a.0)))
             .then_with(|| b.0.cmp(&a.0))
     });
     let entries: String = sources
