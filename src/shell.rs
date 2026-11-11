@@ -177,6 +177,10 @@ pub fn Shell(children: Children, initial_route: Option<Routes>) -> View {
                     // Analytics
                     script(defer=true, src="https://sycamore-analytics.netlify.app/script.js", data-website-id="e539dd59-791b-44a2-9df4-18db88d9cb80")
 
+                    // Algolia Doc Search
+                    link(rel="stylesheet", href="https://cdn.jsdelivr.net/npm/@docsearch/css@5/dist/style.css")
+                    script(src="https://cdn.jsdelivr.net/npm/@docsearch/js@5/dist/umd/docsearch.js")
+
                     sycamore::web::HydrationScript {}
 
                     if option_env!("TRUNK_AUTO_RELOAD").is_some() {

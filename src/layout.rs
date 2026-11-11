@@ -1,10 +1,32 @@
 use sycamore::prelude::*;
+use web_sys::js_sys::JSON;
 
 use crate::{CurrentRoute, Routes};
+use wasm_bindgen::prelude::*;
+
+#[wasm_bindgen]
+unsafe extern "C" {
+    fn docsearch(options: &JsValue);
+}
 
 #[component(inline_props)]
 fn Header(show_menu: ReadSignal<bool>, menu_open: Signal<bool>) -> View {
     let toggle_menu = move |_| menu_open.set(!menu_open.get());
+
+    on_mount(move || {
+        let options = JSON::parse(
+            r##"{
+            "container": "#docsearch",
+            "appId": "TN491WMSU0",
+            "apiKey": "9b8a3ea9c1c76805ce3588b9d961a5c7",
+            "indices": ["Sycamore Website"]
+        }"##,
+        )
+        .unwrap();
+        web_sys::console::log_1(&options);
+        docsearch(&options);
+    });
+
     view! {
         header(class="fixed top-0 z-50 w-full border-b border-gray-200 bg-gray-100 dark:bg-gray-950 dark:border-gray-800") {
             nav(class="px-4") {
@@ -25,6 +47,8 @@ fn Header(show_menu: ReadSignal<bool>, menu_open: Signal<bool>) -> View {
                         }
                     }
                     div(class="flex flex-row items-center gap-1 sm:gap-2") {
+                        div(id="docsearch", class="mr-2") // Algolia DocSearch will mount here.
+
                         a(href="/book/introduction", aria-label="Book", class="flex items-center gap-2 rounded-md px-2 lg:px-3 py-2 hover:text-gray-600 dark:hover:text-gray-300 transition-colors") {
                             i(class="bi bi-book-half text-xl", aria-hidden="true")
                             span(class="hidden lg:inline text-sm") { "Book" }

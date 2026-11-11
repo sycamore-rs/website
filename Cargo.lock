@@ -1564,6 +1564,7 @@ dependencies = [
  "sycamore",
  "sycamore-router",
  "tokio",
+ "wasm-bindgen",
  "web-sys",
  "yaml_serde",
 ]
