@@ -19,7 +19,7 @@
     scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
   }
 
-  html[data-color-scheme='dark'] {
+  html[data-theme='dark'] {
     --scrollbar-track: var(--color-gray-950);
     --scrollbar-thumb: var(--color-gray-600);
   }
