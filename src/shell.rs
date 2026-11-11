@@ -141,7 +141,7 @@ pub fn Shell(children: Children, initial_route: Option<Routes>) -> View {
     let title_static = title.0.get_clone();
 
     view! {
-        html(lang="en", "data-color-scheme"=if dark_mode.0.get() { "dark" } else { "light" }) {
+        html(lang="en", "data-theme"=if dark_mode.0.get() { "dark" } else { "light" }) {
             sycamore::web::NoHydrate {
                 head {
                     meta(charset="utf-8")
@@ -187,11 +187,11 @@ pub fn Shell(children: Children, initial_route: Option<Routes>) -> View {
                         script(dangerously_set_inner_html=AUTORELOAD)
                     }
                     // Synchronously check if we are in dark mode or not.
-                    // If so, set the `data-color-scheme` attribute to "dark" and add the dark class to the body.
+                    // If so, set the `data-theme` attribute to "dark" and add the dark class to the body.
                     script(dangerously_set_inner_html=
                         r#"const darkModeLs = localStorage.getItem("dark_mode");
                         const darkMode = darkModeLs === "true" || (darkModeLs === null && window.matchMedia("(prefers-color-scheme: dark)").matches);
-                        document.documentElement.setAttribute("data-color-scheme", darkMode ? "dark" : "light");"#)
+                        document.documentElement.setAttribute("data-theme", darkMode ? "dark" : "light");"#)
                 }
             }
             body {
