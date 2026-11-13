@@ -2,7 +2,7 @@
 filehash = false
 
 [watch]
-ignore = ["target_ssr"]
+ignore = ["target_ssr", "dist/.stage"]
 # Includes all documentation checkouts.
 watch = ["./"]
 
